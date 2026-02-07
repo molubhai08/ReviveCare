@@ -4,18 +4,18 @@ from django.contrib import messages
 from django.http import JsonResponse , StreamingHttpResponse
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt
+from django.utils import timezone
 import json
 import os
 import re
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-from datetime import datetime
-from .models import Patient
+from datetime import datetime, date, timedelta
+from .models import Patient, SLS
 import cv2
 import mediapipe as mp
 import numpy as np
-import json
 import threading
 import time
 
@@ -88,6 +88,9 @@ PATIENT MEDICAL CONTEXT:
 {patient_context}
 """
 
+# ============================================================================
+# PATIENT AUTHENTICATION & DASHBOARD VIEWS
+# ============================================================================
 
 def login(request):
     """Patient login - email only authentication"""
@@ -139,6 +142,9 @@ def patient_logout(request):
     messages.success(request, 'You have been logged out successfully.')
     return redirect('home')
 
+# ============================================================================
+# CHATBOT VIEWS
+# ============================================================================
 
 def chatbot(request):
     """Chatbot page"""
@@ -330,6 +336,9 @@ def chatbot_send(request):
         print(f"Error in chatbot_send: {e}")
         return JsonResponse({'success': False, 'error': 'Server error'})
 
+# ============================================================================
+# EXERCISE VIEWS
+# ============================================================================
 
 def exercise(request):
     return render(request , 'exercise.html')
@@ -340,18 +349,200 @@ def ar(request):
 def bc(request):
     return render(request , 'bc.html')
 
+# Add these imports at the top of your views.py
+from django.db.models import Sum, Avg, Count, Max
+from datetime import timedelta
+from .models import Patient, SLS
+
+# Update the sr view (replace the existing one at line 344):
+# Replace your existing sr view (around line 344) with this:
+
 def sr(request):
-    return render(request , 'sr.html')
+    """Side Lateral Raise exercise page with progress tracking"""
+    from django.db.models import Sum, Max
+    from datetime import timedelta
+    
+    patient_id = request.session.get('patient_id')
+    
+    context = {
+        'is_logged_in': False,
+        'patient': None,
+        'recent_workouts': [],
+        'stats': {
+            'total_sessions': 0,
+            'total_reps': 0,
+            'avg_quality': 0,
+            'best_session_reps': 0,
+        }
+    }
+    
+    if patient_id:
+        try:
+            patient = Patient.objects.get(id=patient_id)
+            context['is_logged_in'] = True
+            context['patient'] = patient
+            
+            # Check if SLS model exists
+            try:
+                from .models import SLS
+                
+                # Get recent workouts (last 7 days)
+                seven_days_ago = timezone.now().date() - timedelta(days=7)
+                recent_workouts = SLS.objects.filter(
+                    patient=patient,
+                    date__gte=seven_days_ago
+                ).order_by('-created_at')[:5]
+                
+                context['recent_workouts'] = recent_workouts
+                
+                # Calculate stats
+                all_workouts = SLS.objects.filter(patient=patient)
+                
+                if all_workouts.exists():
+                    context['stats'] = {
+                        'total_sessions': all_workouts.count(),
+                        'total_reps': all_workouts.aggregate(Sum('total_reps'))['total_reps__sum'] or 0,
+                        'avg_quality': round(sum([w.quality_score for w in all_workouts]) / all_workouts.count(), 1) if all_workouts.count() > 0 else 0,
+                        'best_session_reps': all_workouts.aggregate(Max('total_reps'))['total_reps__max'] or 0,
+                    }
+            except ImportError:
+                # SLS model doesn't exist yet - migrations not run
+                print("SLS model not found. Please run: python manage.py makemigrations && python manage.py migrate")
+                pass
+                
+        except Patient.DoesNotExist:
+            pass
+    
+    return render(request, 'sr.html', context)
+
+
+# Update the start_workout view to save to database:
+@csrf_exempt
+def start_workout(request):
+    """Start the workout and create database record"""
+    global workout_state
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        target_reps = data.get('target_reps', 12)
+        
+        # Reset workout state
+        workout_state['active'] = True
+        workout_state['complete'] = False
+        workout_state['counter'] = 0
+        workout_state['stage'] = None
+        workout_state['excellent_reps'] = 0
+        workout_state['good_reps'] = 0
+        workout_state['partial_reps'] = 0
+        workout_state['target_reps'] = target_reps
+        workout_state['initial_left_shoulder'] = None
+        workout_state['initial_right_shoulder'] = None
+        workout_state['start_time'] = time.time()
+        workout_state['current_rep'] = {
+            "left_min_angle": 180,
+            "left_max_angle": 0,
+            "left_elbow_angles": [],
+            "left_shoulder_elevation": 0,
+            "right_min_angle": 180,
+            "right_max_angle": 0,
+            "right_elbow_angles": [],
+            "right_shoulder_elevation": 0,
+            "max_asymmetry": 0,
+        }
+        
+        # Create SLS record if patient is logged in
+        patient_id = request.session.get('patient_id')
+        if patient_id:
+            try:
+                patient = Patient.objects.get(id=patient_id)
+                workout_state['workout_record'] = SLS.objects.create(
+                    patient=patient,
+                    target_reps=target_reps,
+                    date=timezone.now().date()
+                )
+            except Patient.DoesNotExist:
+                workout_state['workout_record'] = None
+        else:
+            workout_state['workout_record'] = None
+        
+        return JsonResponse({'status': 'started', 'target_reps': target_reps})
+    
+    return JsonResponse({'error': 'Invalid request'}, status=400)
+
+
+# Update the get_workout_status view to save progress:
+@csrf_exempt
+def get_workout_status(request):
+    """Get current workout status and update database"""
+    global workout_state
+    
+    # Update database record if it exists
+    if workout_state.get('workout_record'):
+        try:
+            record = workout_state['workout_record']
+            record.total_reps = workout_state['counter']
+            record.excellent_reps = workout_state['excellent_reps']
+            record.good_reps = workout_state['good_reps']
+            record.partial_reps = workout_state['partial_reps']
+            record.completed = workout_state['complete']
+            
+            # Calculate duration
+            if workout_state.get('start_time'):
+                record.duration_seconds = int(time.time() - workout_state['start_time'])
+            
+            record.save()
+        except Exception as e:
+            print(f"Error updating SLS record: {e}")
+    
+    return JsonResponse({
+        'active': workout_state['active'],
+        'complete': workout_state['complete'],
+        'counter': workout_state['counter'],
+        'target_reps': workout_state['target_reps'],
+        'excellent_reps': workout_state['excellent_reps'],
+        'good_reps': workout_state['good_reps'],
+        'partial_reps': workout_state['partial_reps'],
+    })
+
+
+# Update the reset_workout view:
+@csrf_exempt
+def reset_workout(request):
+    """Reset workout state and finalize database record"""
+    global workout_state
+    
+    # Finalize the database record before resetting
+    if workout_state.get('workout_record'):
+        try:
+            record = workout_state['workout_record']
+            record.total_reps = workout_state['counter']
+            record.excellent_reps = workout_state['excellent_reps']
+            record.good_reps = workout_state['good_reps']
+            record.partial_reps = workout_state['partial_reps']
+            record.completed = workout_state['complete']
+            
+            if workout_state.get('start_time'):
+                record.duration_seconds = int(time.time() - workout_state['start_time'])
+            
+            record.save()
+        except Exception as e:
+            print(f"Error finalizing SLS record: {e}")
+    
+    workout_state['active'] = False
+    workout_state['complete'] = False
+    workout_state['counter'] = 0
+    workout_state['excellent_reps'] = 0
+    workout_state['good_reps'] = 0
+    workout_state['partial_reps'] = 0
+    workout_state['workout_record'] = None
+    workout_state['start_time'] = None
+    
+    return JsonResponse({'status': 'reset'})
 
 def jj(request):
     return render(request , 'jj.html')
 
-"""
-Side Lateral Raise Tracker View for Django
-Add this to your Patients/views.py file
-"""
 # ============================================================================
-# METRICS FROM PERFECT FORM VIDEO ANALYSIS - BOTH ARMS
+# SIDE LATERAL RAISE - METRICS & CONFIGURATION
 # ============================================================================
 
 LEFT_ARM_METRICS = {
@@ -414,7 +605,7 @@ workout_state = {
 }
 
 # ============================================================================
-# HELPER FUNCTIONS
+# SIDE LATERAL RAISE - HELPER FUNCTIONS
 # ============================================================================
 
 def calculate_angle(a, b, c):
@@ -453,7 +644,7 @@ def draw_text_with_background(image, text, position, font_scale=0.7, thickness=2
     cv2.putText(image, text, (x, y), font, font_scale, text_color, thickness, cv2.LINE_AA)
 
 # ============================================================================
-# VIDEO STREAMING GENERATOR
+# SIDE LATERAL RAISE - VIDEO STREAMING
 # ============================================================================
 
 def generate_frames():
@@ -708,8 +899,113 @@ def generate_frames():
     cap.release()
 
 # ============================================================================
-# DJANGO VIEWS
+# SIDE LATERAL RAISE - DJANGO VIEWS
 # ============================================================================
+
+# ============================================================================
+# SIDE LATERAL RAISE - DJANGO VIEWS
+# ============================================================================
+
+def sr(request):
+    """Side Lateral Raise dashboard with workout history"""
+    patient_id = request.session.get('patient_id')
+    
+    # Check if user is logged in
+    if not patient_id:
+        messages.error(request, 'Please log in to view your workout history.')
+        return redirect('login')
+    
+    try:
+        patient = Patient.objects.get(id=patient_id)
+        
+        # Get all SLS workouts for this patient, ordered by date
+        sls_workouts = SLS.objects.filter(patient=patient).order_by('date')
+        
+        # Prepare workout data for the chart (last 10 sessions)
+        workout_data = []
+        for workout in sls_workouts[:10]:  # Limit to last 10 sessions for clarity
+            workout_data.append({
+                'date': workout.date.isoformat(),  # Convert to ISO format for JavaScript
+                'excellent_reps': workout.excellent_reps,
+                'good_reps': workout.good_reps,
+                'partial_reps': workout.partial_reps,
+                'total_reps': workout.total_reps,
+                'completion_percentage': workout.completion_percentage,
+                'quality_score': workout.quality_score
+            })
+        
+        # If no data exists, provide sample data
+        if not workout_data:
+            workout_data = [
+                {
+                    'date': (date.today() - timedelta(days=6)).isoformat(),
+                    'excellent_reps': 0,
+                    'good_reps': 0,
+                    'partial_reps': 0,
+                    'total_reps': 0,
+                    'completion_percentage': 0,
+                    'quality_score': 0
+                }
+            ]
+        
+        context = {
+            'patient': patient,
+            'workout_data': json.dumps(workout_data),  # Convert to JSON for JavaScript
+        }
+        
+        return render(request, 'sr.html', context)
+        
+    except Patient.DoesNotExist:
+        messages.error(request, 'Session expired. Please log in again.')
+        return redirect('login')
+    
+
+def reset_workout(request):
+    if request.method == "POST":
+        # Here you can reset any session or database flags
+        return JsonResponse({"status": "reset"})
+    return JsonResponse({"status": "error"}, status=400)
+
+def get_workout_status(request):
+    # Dummy example; replace with actual tracking logic
+    status = request.session.get('workout_status', {
+        'counter': 0,
+        'target_reps': 12,
+        'excellent_reps': 0,
+        'good_reps': 0,
+        'partial_reps': 0,
+        'complete': False
+    })
+    return JsonResponse(status)
+
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+import json
+from .models import SLS, Patient  # Adjust according to your model
+
+@csrf_exempt
+def save_workout(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            # Example: save to database (adjust fields as needed)
+            patient = Patient.objects.first()  # Replace with actual patient
+            sls = SLS.objects.create(
+                patient=patient,
+                total_reps=data.get('total_reps', 0),
+                target_reps=data.get('target_reps', 0),
+                excellent_reps=data.get('excellent_reps', 0),
+                good_reps=data.get('good_reps', 0),
+                partial_reps=data.get('partial_reps', 0),
+                completed=data.get('completed', False)
+            )
+            return JsonResponse({'status': 'success', 'workout_id': sls.id})
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'error': str(e)})
+    return JsonResponse({'status': 'error', 'error': 'Invalid request method'})
+
+
+
 
 def srtwo(request):
     """Side Lateral Raise tracker main view"""
@@ -755,28 +1051,99 @@ def start_workout(request):
     
     return JsonResponse({'error': 'Invalid request'}, status=400)
 
+
 @csrf_exempt
-def get_workout_status(request):
-    """Get current workout status"""
-    global workout_state
-    return JsonResponse({
-        'active': workout_state['active'],
-        'complete': workout_state['complete'],
-        'counter': workout_state['counter'],
-        'target_reps': workout_state['target_reps'],
-        'excellent_reps': workout_state['excellent_reps'],
-        'good_reps': workout_state['good_reps'],
-        'partial_reps': workout_state['partial_reps'],
-    })
+def save_workout(request):
+    """Save completed workout to database"""
+    if request.method == 'POST':
+        try:
+            patient_id = request.session.get('patient_id')
+            
+            if not patient_id:
+                return JsonResponse({'error': 'Not authenticated'}, status=401)
+            
+            patient = Patient.objects.get(id=patient_id)
+            data = json.loads(request.body)
+            
+            # Create new SLS workout entry
+            workout = SLS.objects.create(
+                patient=patient,
+                date=date.today(),
+                total_reps=data.get('total_reps', 0),
+                target_reps=data.get('target_reps', 10),
+                excellent_reps=data.get('excellent_reps', 0),
+                good_reps=data.get('good_reps', 0),
+                partial_reps=data.get('partial_reps', 0),
+                duration_seconds=data.get('duration_seconds', 0),
+                completed=data.get('completed', False)
+            )
+            
+            return JsonResponse({
+                'status': 'success',
+                'workout_id': workout.id,
+                'message': 'Workout saved successfully!'
+            })
+            
+        except Patient.DoesNotExist:
+            return JsonResponse({'error': 'Patient not found'}, status=404)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+    
+    return JsonResponse({'error': 'Invalid request'}, status=400)
+
 
 @csrf_exempt
 def reset_workout(request):
-    """Reset workout state"""
+    """Reset the workout state"""
     global workout_state
-    workout_state['active'] = False
-    workout_state['complete'] = False
-    workout_state['counter'] = 0
-    workout_state['excellent_reps'] = 0
-    workout_state['good_reps'] = 0
-    workout_state['partial_reps'] = 0
-    return JsonResponse({'status': 'reset'})
+    if request.method == 'POST':
+        # Reset all workout state
+        workout_state['active'] = False
+        workout_state['complete'] = False
+        workout_state['counter'] = 0
+        workout_state['stage'] = None
+        workout_state['excellent_reps'] = 0
+        workout_state['good_reps'] = 0
+        workout_state['partial_reps'] = 0
+        workout_state['target_reps'] = 12
+        workout_state['initial_left_shoulder'] = None
+        workout_state['initial_right_shoulder'] = None
+        workout_state['left_shoulder_angle'] = 0
+        workout_state['right_shoulder_angle'] = 0
+        workout_state['asymmetry'] = 0
+        workout_state['form_warning'] = ""
+        workout_state['current_rep'] = {
+            "left_min_angle": 180,
+            "left_max_angle": 0,
+            "left_elbow_angles": [],
+            "left_shoulder_elevation": 0,
+            "right_min_angle": 180,
+            "right_max_angle": 0,
+            "right_elbow_angles": [],
+            "right_shoulder_elevation": 0,
+            "max_asymmetry": 0,
+        }
+        
+        return JsonResponse({'status': 'reset'})
+    
+    return JsonResponse({'error': 'Invalid request'}, status=400)
+
+
+def get_workout_status(request):
+    """Get current workout status"""
+    global workout_state
+    
+    return JsonResponse({
+        'counter': workout_state['counter'],
+        'stage': workout_state['stage'],
+        'excellent_reps': workout_state['excellent_reps'],
+        'good_reps': workout_state['good_reps'],
+        'partial_reps': workout_state['partial_reps'],
+        'target_reps': workout_state['target_reps'],
+        'complete': workout_state['complete'],
+        'active': workout_state['active'],
+        'left_shoulder_angle': int(workout_state['left_shoulder_angle']),
+        'right_shoulder_angle': int(workout_state['right_shoulder_angle']),
+        'asymmetry': int(workout_state['asymmetry']),
+        'form_warning': workout_state['form_warning']
+    })

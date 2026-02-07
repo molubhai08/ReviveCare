@@ -5,7 +5,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ReViveCare - Bicep Curls</title>
+    <title>ReViveCare - Side Lateral Raise Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         * {
             margin: 0;
@@ -85,7 +86,7 @@
         .exercise-layout {
             display: flex;
             gap: 2rem;
-            align-items: center;
+            align-items: flex-start;
             justify-content: center;
             min-height: calc(100vh - 120px);
         }
@@ -112,20 +113,18 @@
             object-fit: cover;
         }
 
-
-
-        /* Control Panel */
-        .control-panel {
+        /* Dashboard Panel */
+        .dashboard-panel {
             background: white;
             border-radius: 16px;
             padding: 2rem;
             box-shadow: 0 4px 20px rgba(0,0,0,0.08);
             animation: fadeInRight 0.6s ease;
-            width: 400px;
+            width: 600px;
             flex-shrink: 0;
         }
 
-        .control-panel h2 {
+        .dashboard-panel h2 {
             color: #2c3e50;
             margin-bottom: 1.5rem;
             display: flex;
@@ -133,120 +132,82 @@
             gap: 0.5rem;
         }
 
-        /* Rep Counter */
-        .rep-counter {
-            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+        /* Graph Container */
+        .graph-container {
+            background: #f8f9fa;
             border-radius: 12px;
-            padding: 2rem;
-            text-align: center;
+            padding: 1.5rem;
             margin-bottom: 2rem;
-            box-shadow: 0 8px 20px rgba(76, 175, 80, 0.3);
+            height: 400px;
         }
 
-        .rep-counter-label {
-            color: rgba(255,255,255,0.9);
-            font-size: 0.9rem;
-            margin-bottom: 0.5rem;
+        .graph-container canvas {
+            max-height: 100%;
         }
 
-        .rep-count {
-            color: white;
-            font-size: 4rem;
-            font-weight: bold;
-            line-height: 1;
-            margin-bottom: 0.5rem;
-        }
-
-        .rep-target {
-            color: rgba(255,255,255,0.8);
-            font-size: 1.2rem;
-        }
-
-        /* Set Reps */
-        .set-reps {
-            margin-bottom: 2rem;
-        }
-
-        .set-reps label {
-            display: block;
-            color: #2c3e50;
-            font-weight: 600;
-            margin-bottom: 0.8rem;
-        }
-
-        .rep-input-group {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .rep-btn {
-            background: #e0e0e0;
-            border: none;
-            width: 45px;
-            height: 45px;
-            border-radius: 8px;
-            font-size: 1.5rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            color: #2c3e50;
-            font-weight: bold;
-        }
-
-        .rep-btn:hover {
-            background: #4CAF50;
-            color: white;
-            transform: scale(1.05);
-        }
-
-        .rep-input {
-            flex: 1;
-            padding: 0.8rem;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 1.2rem;
-            text-align: center;
-            font-weight: bold;
-            color: #2c3e50;
-            transition: border-color 0.3s ease;
-        }
-
-        .rep-input:focus {
-            outline: none;
-            border-color: #4CAF50;
-        }
-
-        /* Quick Set Buttons */
-        .quick-sets {
+        /* Stats Summary */
+        .stats-summary {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 0.5rem;
-            margin-top: 1rem;
+            gap: 1rem;
+            margin-bottom: 2rem;
         }
 
-        .quick-set-btn {
-            background: #f8f9fa;
-            border: 2px solid #e0e0e0;
-            padding: 0.6rem;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: #2c3e50;
+        .stat-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e8ebef 100%);
+            border-radius: 12px;
+            padding: 1rem;
+            text-align: center;
+            border: 2px solid transparent;
             transition: all 0.3s ease;
         }
 
-        .quick-set-btn:hover {
-            background: #4CAF50;
-            border-color: #4CAF50;
-            color: white;
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
-        /* Action Buttons */
-        .action-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
+        .stat-card.excellent {
+            border-color: #4CAF50;
+        }
+
+        .stat-card.good {
+            border-color: #2196F3;
+        }
+
+        .stat-card.partial {
+            border-color: #FF9800;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .stat-card.excellent .stat-value {
+            color: #4CAF50;
+        }
+
+        .stat-card.good .stat-value {
+            color: #2196F3;
+        }
+
+        .stat-card.partial .stat-value {
+            color: #FF9800;
+        }
+
+        /* Action Button */
+        .action-button {
+            width: 100%;
         }
 
         .start-btn {
@@ -260,6 +221,7 @@
             font-weight: 600;
             transition: all 0.3s ease;
             box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+            width: 100%;
         }
 
         .start-btn:hover {
@@ -267,35 +229,7 @@
             box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
         }
 
-        .reset-btn {
-            background: white;
-            color: #e74c3c;
-            border: 2px solid #e74c3c;
-            padding: 1rem;
-            font-size: 1rem;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .reset-btn:hover {
-            background: #e74c3c;
-            color: white;
-        }
-
         /* Animations */
-        @keyframes fadeInLeft {
-            from {
-                opacity: 0;
-                transform: translateX(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
         @keyframes fadeInRight {
             from {
                 opacity: 0;
@@ -311,11 +245,12 @@
         @media (max-width: 1024px) {
             .exercise-layout {
                 flex-direction: column;
+                align-items: center;
             }
 
-            .control-panel {
+            .dashboard-panel {
                 width: 100%;
-                max-width: 400px;
+                max-width: 600px;
             }
         }
 
@@ -329,12 +264,16 @@
                 height: 533px;
             }
 
-            .control-panel {
+            .dashboard-panel {
                 padding: 1.5rem;
             }
 
-            .rep-count {
-                font-size: 3rem;
+            .graph-container {
+                height: 300px;
+            }
+
+            .stats-summary {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -358,146 +297,186 @@
             <div class="video-section">
                 <div class="video-container">
                     <video id="exerciseVideo" autoplay loop muted playsinline>
-    <source src="{% static 'Patients/videos/sl.mp4' %}" type="video/mp4">
-    Your browser does not support the video tag.
-</video>
+                        <source src="{% static 'Patients/videos/sl.mp4' %}" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
                 </div>
             </div>
 
-            <!-- Control Panel -->
-            <div class="control-panel">
-                <h2>🎯 Your Session</h2>
+            <!-- Dashboard Panel -->
+            <div class="dashboard-panel">
+                <h2>📊 Progress Dashboard</h2>
 
-                <!-- Rep Counter -->
-                <div class="rep-counter">
-                    <div class="rep-counter-label">REPS COMPLETED</div>
-                    <div class="rep-count" id="repCount">0</div>
-                    <div class="rep-target">of <span id="targetReps">10</span> reps</div>
-                </div>
-
-                <!-- Set Reps -->
-                <div class="set-reps">
-                    <label>Set Your Target Reps</label>
-                    <div class="rep-input-group">
-                        <button class="rep-btn" id="decreaseBtn">−</button>
-                        <input type="number" class="rep-input" id="repInput" value="10" min="1" max="50">
-                        <button class="rep-btn" id="increaseBtn">+</button>
+                <!-- Stats Summary -->
+                <div class="stats-summary">
+                    <div class="stat-card excellent">
+                        <div class="stat-label">Excellent Reps</div>
+                        <div class="stat-value" id="totalExcellent">0</div>
                     </div>
-                    <div class="quick-sets">
-                        <button class="quick-set-btn" onclick="setReps(5)">5 reps</button>
-                        <button class="quick-set-btn" onclick="setReps(10)">10 reps</button>
-                        <button class="quick-set-btn" onclick="setReps(15)">15 reps</button>
-                        <button class="quick-set-btn" onclick="setReps(20)">20 reps</button>
-                        <button class="quick-set-btn" onclick="setReps(25)">25 reps</button>
-                        <button class="quick-set-btn" onclick="setReps(30)">30 reps</button>
+                    <div class="stat-card good">
+                        <div class="stat-label">Good Reps</div>
+                        <div class="stat-value" id="totalGood">0</div>
+                    </div>
+                    <div class="stat-card partial">
+                        <div class="stat-label">Partial Reps</div>
+                        <div class="stat-value" id="totalPartial">0</div>
                     </div>
                 </div>
 
-                <!-- Action Buttons -->
-                <div class="action-buttons">
-                    <a href= "{% url 'srtwo' %}" ><button class="start-btn" id="startBtn">▶ Start Exercise</button></a>
-                    <button class="reset-btn" id="resetBtn">↺ Reset Counter</button>
+                <!-- Graph Container -->
+                <div class="graph-container">
+                    <canvas id="progressChart"></canvas>
+                </div>
+
+                <!-- Start Button -->
+                <div class="action-button">
+                    <a href="{% url 'srtwo' %}">
+                        <button class="start-btn">▶ Start Exercise</button>
+                    </a>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Get elements
-        const video = document.getElementById('exerciseVideo');
-        const repCountDisplay = document.getElementById('repCount');
-        const targetRepsDisplay = document.getElementById('targetReps');
-        const repInput = document.getElementById('repInput');
-        const decreaseBtn = document.getElementById('decreaseBtn');
-        const increaseBtn = document.getElementById('increaseBtn');
-        const startBtn = document.getElementById('startBtn');
-        const resetBtn = document.getElementById('resetBtn');
+        // Sample data - Replace this with actual data from your Django backend
+        // You should pass this data from your view using context
+        const workoutData = {{ workout_data|safe }};
 
-        let currentReps = 0;
-        let targetReps = 10;
-        let isExercising = false;
-
-        // Rep input controls
-        decreaseBtn.addEventListener('click', () => {
-            if (repInput.value > 1) {
-                repInput.value = parseInt(repInput.value) - 1;
-                updateTargetReps();
-            }
+        // Extract dates and rep counts
+        const dates = workoutData.map(session => {
+            const date = new Date(session.date);
+            return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
         });
 
-        increaseBtn.addEventListener('click', () => {
-            if (repInput.value < 50) {
-                repInput.value = parseInt(repInput.value) + 1;
-                updateTargetReps();
-            }
-        });
+        const excellentReps = workoutData.map(session => session.excellent_reps);
+        const goodReps = workoutData.map(session => session.good_reps);
+        const partialReps = workoutData.map(session => session.partial_reps);
 
-        repInput.addEventListener('change', () => {
-            if (repInput.value < 1) repInput.value = 1;
-            if (repInput.value > 50) repInput.value = 50;
-            updateTargetReps();
-        });
+        // Calculate totals
+        const totalExcellent = excellentReps.reduce((sum, val) => sum + val, 0);
+        const totalGood = goodReps.reduce((sum, val) => sum + val, 0);
+        const totalPartial = partialReps.reduce((sum, val) => sum + val, 0);
 
-        function setReps(num) {
-            repInput.value = num;
-            updateTargetReps();
-        }
+        // Update stat cards
+        document.getElementById('totalExcellent').textContent = totalExcellent;
+        document.getElementById('totalGood').textContent = totalGood;
+        document.getElementById('totalPartial').textContent = totalPartial;
 
-        function updateTargetReps() {
-            targetReps = parseInt(repInput.value);
-            targetRepsDisplay.textContent = targetReps;
-        }
-
-        // Start button
-        startBtn.addEventListener('click', () => {
-            if (!isExercising) {
-                isExercising = true;
-                startBtn.textContent = '✓ Rep Complete';
-                startBtn.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
-            } else {
-                incrementRep();
-            }
-        });
-
-        function incrementRep() {
-            if (currentReps < targetReps) {
-                currentReps++;
-                repCountDisplay.textContent = currentReps;
-                
-                // Check if completed
-                if (currentReps >= targetReps) {
-                    completeExercise();
-                }
-            }
-        }
-
-        function completeExercise() {
-            startBtn.textContent = '🎉 Complete!';
-            startBtn.style.background = 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)';
-            
-            // Celebration effect
-            setTimeout(() => {
-                alert('Great job! You completed all reps! 💪');
-            }, 500);
-        }
-
-        // Reset button
-        resetBtn.addEventListener('click', () => {
-            currentReps = 0;
-            repCountDisplay.textContent = '0';
-            isExercising = false;
-            startBtn.textContent = '▶ Start Exercise';
-            startBtn.style.background = 'linear-gradient(135deg, #4CAF50 0%, #45a049 100%)';
-        });
-
-        // Keyboard shortcuts
-        document.addEventListener('keydown', (e) => {
-            if (e.code === 'Space') {
-                e.preventDefault();
-                if (isExercising) {
-                    incrementRep();
-                } else {
-                    startBtn.click();
+        // Create the chart
+        const ctx = document.getElementById('progressChart').getContext('2d');
+        const progressChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: dates,
+                datasets: [
+                    {
+                        label: 'Excellent Reps',
+                        data: excellentReps,
+                        borderColor: '#4CAF50',
+                        backgroundColor: 'rgba(76, 175, 80, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 5,
+                        pointHoverRadius: 7,
+                        pointBackgroundColor: '#4CAF50',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2
+                    },
+                    {
+                        label: 'Good Reps',
+                        data: goodReps,
+                        borderColor: '#2196F3',
+                        backgroundColor: 'rgba(33, 150, 243, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 5,
+                        pointHoverRadius: 7,
+                        pointBackgroundColor: '#2196F3',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2
+                    },
+                    {
+                        label: 'Partial Reps',
+                        data: partialReps,
+                        borderColor: '#FF9800',
+                        backgroundColor: 'rgba(255, 152, 0, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 5,
+                        pointHoverRadius: 7,
+                        pointBackgroundColor: '#FF9800',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top',
+                        labels: {
+                            usePointStyle: true,
+                            padding: 15,
+                            font: {
+                                size: 12,
+                                weight: '600'
+                            }
+                        }
+                    },
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false,
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                        padding: 12,
+                        titleFont: {
+                            size: 14,
+                            weight: 'bold'
+                        },
+                        bodyFont: {
+                            size: 13
+                        },
+                        callbacks: {
+                            label: function(context) {
+                                return context.dataset.label + ': ' + context.parsed.y + ' reps';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 5,
+                            font: {
+                                size: 11
+                            }
+                        },
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.05)'
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            font: {
+                                size: 11
+                            }
+                        },
+                        grid: {
+                            display: false
+                        }
+                    }
+                },
+                interaction: {
+                    mode: 'nearest',
+                    axis: 'x',
+                    intersect: false
                 }
             }
         });
