@@ -93,7 +93,7 @@
         .exercise-layout {
             display: flex;
             gap: 2rem;
-            align-items: center;
+            align-items: flex-start;
             justify-content: center;
             min-height: calc(100vh - 120px);
         }
@@ -421,17 +421,6 @@
         }
 
         /* Animations */
-        @keyframes fadeInLeft {
-            from {
-                opacity: 0;
-                transform: translateX(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
         @keyframes fadeInRight {
             from {
                 opacity: 0;
@@ -447,9 +436,10 @@
         @media (max-width: 1024px) {
             .exercise-layout {
                 flex-direction: column;
+                align-items: center;
             }
 
-            .control-panel {
+            .dashboard-panel {
                 width: 100%;
                 max-width: 420px;
             }
@@ -506,6 +496,9 @@
                         <source src="{% static 'Patients/videos/sl.mp4' %}" type="video/mp4">
                         Your browser does not support the video tag.
                     </video>
+                        <source src="{% static 'Patients/videos/sl.mp4' %}" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
                 </div>
             </div>
 
@@ -541,13 +534,9 @@
                             <i class="fi fi-rr-plus-small"></i>
                         </button>
                     </div>
-                    <div class="quick-sets">
-                        <button class="quick-set-btn" onclick="setReps(5)">5 reps</button>
-                        <button class="quick-set-btn" onclick="setReps(10)">10 reps</button>
-                        <button class="quick-set-btn" onclick="setReps(15)">15 reps</button>
-                        <button class="quick-set-btn" onclick="setReps(20)">20 reps</button>
-                        <button class="quick-set-btn" onclick="setReps(25)">25 reps</button>
-                        <button class="quick-set-btn" onclick="setReps(30)">30 reps</button>
+                    <div class="stat-card partial">
+                        <div class="stat-label">Partial Reps</div>
+                        <div class="stat-value" id="totalPartial">0</div>
                     </div>
                 </div>
 

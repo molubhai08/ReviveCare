@@ -39,7 +39,10 @@ urlpatterns = [
     path('sr', sr, name='sr'),  # Main tracker page
     path('srtwo', srtwo, name='srtwo'),
     path('sr/video_feed/', video_feed, name='video_feed'),  # Video streaming
-    path('sr/start/', start_workout, name='start_workout'),  # Start workout API
-    path('sr/status/', get_workout_status, name='get_workout_status'),  # Get status API
-    path('sr/reset/', reset_workout, name='reset_workout'),  # Reset workout API
+    path('sr/start/', start_workout, name='start_workout')  # Start workout API,
+    , path('sr/reset/', reset_workout, name='reset_workout'),
+    path('sr/status/', get_workout_status, name='get_workout_status'),
+    path('sr/save/', save_workout, name='save_workout'),
+
+
 ]

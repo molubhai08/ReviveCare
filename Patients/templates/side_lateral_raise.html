@@ -8,6 +8,11 @@
     <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.1.0/uicons-regular-rounded/css/uicons-regular-rounded.css">
     <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.1.0/uicons-solid-rounded/css/uicons-solid-rounded.css">
     <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.1.0/uicons-bold-rounded/css/uicons-bold-rounded.css">
+    <title>ReViveCare - Side Lateral Raise</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.1.0/uicons-regular-rounded/css/uicons-regular-rounded.css">
+    <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.1.0/uicons-solid-rounded/css/uicons-solid-rounded.css">
+    <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.1.0/uicons-bold-rounded/css/uicons-bold-rounded.css">
     <style>
         * {
             margin: 0;
@@ -23,7 +28,18 @@
             --bg-light: #F8FBFC;
         }
 
+        :root {
+            --primary-teal: #00A8A8;
+            --primary-teal-dark: #008B8B;
+            --text-dark: #2C3E50;
+            --text-gray: #6B7B8C;
+            --bg-light: #F8FBFC;
+        }
+
         body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #F8FBFC 0%, #E8F4F4 100%);
+            color: var(--text-dark);
             font-family: 'Poppins', sans-serif;
             background: linear-gradient(135deg, #F8FBFC 0%, #E8F4F4 100%);
             color: var(--text-dark);
@@ -33,8 +49,13 @@
         /* Header */
         header {
             background: linear-gradient(135deg, #00A8A8 0%, #4DB6AC 100%);
+            background: linear-gradient(135deg, #00A8A8 0%, #4DB6AC 100%);
             color: white;
             padding: 1rem 0;
+            box-shadow: 0 2px 15px rgba(0, 168, 168, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 100;
             box-shadow: 0 2px 15px rgba(0, 168, 168, 0.2);
             position: sticky;
             top: 0;
@@ -43,7 +64,9 @@
 
         nav {
             max-width: 1300px;
+            max-width: 1300px;
             margin: 0 auto;
+            padding: 0 1.5rem;
             padding: 0 1.5rem;
             display: flex;
             justify-content: space-between;
@@ -59,11 +82,20 @@
         }
 
         .logo i {
+            gap: 0.6rem;
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
+        .logo i {
             font-size: 1.5rem;
         }
 
         .back-link {
+        .back-link {
             background: rgba(255,255,255,0.2);
+            padding: 0.5rem 1.2rem;
+            border-radius: 25px;
             padding: 0.5rem 1.2rem;
             border-radius: 25px;
             color: white;
@@ -73,10 +105,17 @@
             display: flex;
             align-items: center;
             gap: 0.4rem;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
         }
 
         .back-link:hover {
+        .back-link:hover {
             background: white;
+            color: var(--primary-teal);
             color: var(--primary-teal);
         }
 
@@ -94,11 +133,30 @@
             padding: 2rem;
             margin-bottom: 1.5rem;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        /* Container */
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        /* Exercise Header */
+        .exercise-header {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
             display: flex;
+            justify-content: space-between;
             justify-content: space-between;
             align-items: center;
         }
 
+        .header-left h1 {
+            font-size: 1.8rem;
+            margin-bottom: 0.3rem;
+            font-weight: 700;
         .header-left h1 {
             font-size: 1.8rem;
             margin-bottom: 0.3rem;
@@ -110,8 +168,16 @@
 
         .header-left h1 i {
             color: var(--primary-teal);
+            gap: 0.6rem;
         }
 
+        .header-left h1 i {
+            color: var(--primary-teal);
+        }
+
+        .header-left p {
+            color: var(--text-gray);
+            font-size: 0.95rem;
         .header-left p {
             color: var(--text-gray);
             font-size: 0.95rem;
@@ -123,28 +189,44 @@
             padding: 0.8rem 1.5rem;
             border-radius: 12px;
             font-weight: 600;
+        .difficulty-tag {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 600;
             display: flex;
             align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 4px 15px rgba(245, 87, 108, 0.3);
             gap: 0.5rem;
             box-shadow: 0 4px 15px rgba(245, 87, 108, 0.3);
         }
 
         /* Main Grid */
         .main-grid {
+        /* Main Grid */
+        .main-grid {
             display: grid;
             grid-template-columns: 2fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
             gap: 1.5rem;
             margin-bottom: 1.5rem;
         }
 
         /* Video Section */
         .video-card {
+        .video-card {
             background: white;
             border-radius: 16px;
             padding: 1.5rem;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
 
+        .video-wrapper {
         .video-wrapper {
             position: relative;
             width: 100%;
@@ -160,6 +242,16 @@
             display: block;
         }
 
+        .live-badge {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            background: #ff4444;
+            color: white;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
         .live-badge {
             position: absolute;
             top: 1rem;
@@ -423,8 +515,9 @@
             padding: 3rem;
             max-width: 500px;
             width: 90%;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
             animation: slideUp 0.4s ease;
+            text-align: center;
             text-align: center;
         }
 
@@ -442,6 +535,24 @@
         .modal-icon {
             font-size: 4rem;
             margin-bottom: 1rem;
+        }
+
+        .modal-header h2 {
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+            font-size: 2rem;
+        }
+
+        .modal-content h2 {
+            font-size: 2rem;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .modal-content > p {
+            color: var(--text-gray);
+            margin-bottom: 2rem;
         }
 
         .modal-content h2 {
@@ -487,6 +598,28 @@
             margin-top: 1rem;
         }
 
+        @keyframes fadeInRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         /* Responsive */
         @media (max-width: 1024px) {
             .main-grid {
@@ -514,8 +647,8 @@
                 grid-template-columns: 1fr;
             }
 
-            .modal-content {
-                padding: 2rem;
+            .stat-value {
+                font-size: 2.5rem;
             }
         }
     </style>
@@ -694,6 +827,8 @@
     <script>
         let checkInterval = null;
         let workoutActive = false;
+        let workoutStartTime = null;
+        let workoutData = null; // Store workout data for saving
 
         // Start Workout
         document.getElementById('startBtn').addEventListener('click', async function() {
@@ -714,6 +849,7 @@
                 
                 if (data.status === 'started') {
                     workoutActive = true;
+                    workoutStartTime = Date.now(); // Track start time
                     document.getElementById('startBtn').disabled = true;
                     document.getElementById('targetReps').disabled = true;
                     document.getElementById('resetBtn').style.display = 'inline-flex';
@@ -736,6 +872,7 @@
                 });
                 
                 workoutActive = false;
+                workoutStartTime = null;
                 clearInterval(checkInterval);
                 
                 document.getElementById('startBtn').disabled = false;
@@ -772,11 +909,57 @@
                 if (data.complete && workoutActive) {
                     workoutActive = false;
                     clearInterval(checkInterval);
+                    workoutData = data; // Store data for saving
                     showSummary(data);
                 }
                 
             } catch (error) {
                 console.error('Error checking status:', error);
+            }
+        }
+
+        // Save Workout to Database
+        async function saveWorkoutToDatabase(data) {
+            const saveStatusEl = document.getElementById('saveStatus');
+            saveStatusEl.style.display = 'block';
+            saveStatusEl.className = 'save-status saving';
+            saveStatusEl.innerHTML = '💾 Saving workout to database...';
+            
+            try {
+                // Calculate workout duration in seconds
+                const durationSeconds = workoutStartTime 
+                    ? Math.floor((Date.now() - workoutStartTime) / 1000) 
+                    : 0;
+
+                const response = await fetch('{% url "save_workout" %}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        total_reps: data.counter,
+                        target_reps: data.target_reps,
+                        excellent_reps: data.excellent_reps,
+                        good_reps: data.good_reps,
+                        partial_reps: data.partial_reps,
+                        duration_seconds: durationSeconds,
+                        completed: true
+                    })
+                });
+
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    saveStatusEl.className = 'save-status success';
+                    saveStatusEl.innerHTML = '✓ Workout saved successfully!';
+                    console.log('Workout saved with ID:', result.workout_id);
+                } else {
+                    throw new Error(result.error || 'Unknown error');
+                }
+            } catch (error) {
+                console.error('Error saving workout:', error);
+                saveStatusEl.className = 'save-status error';
+                saveStatusEl.innerHTML = '⚠ Failed to save workout: ' + error.message;
             }
         }
 
@@ -793,6 +976,9 @@
             document.getElementById('summaryQuality').textContent = qualityRate + '%';
             
             modal.classList.add('active');
+            
+            // Save workout to database immediately
+            saveWorkoutToDatabase(data);
             
             // Auto redirect after 10 seconds
             let countdown = 10;
@@ -812,7 +998,7 @@
 
         // Redirect to Dashboard
         function redirectToDashboard() {
-            window.location.href = '{% url "patient_dashboard" %}';
+            window.location.href = '{% url "sr" %}';  // Redirect to SR dashboard to see updated stats
         }
 
         // Close modal when clicking outside
