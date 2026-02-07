@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.http import JsonResponse , StreamingHttpResponse
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt
+from twilio.rest import Client
 from django.utils import timezone
 import json
 import os
@@ -18,6 +19,11 @@ import mediapipe as mp
 import numpy as np
 import threading
 import time
+import os
+from dotenv import load_dotenv
+
+# Load environment variables from a .env file
+load_dotenv()  
 
 # Import LangChain components
 try:
@@ -29,6 +35,10 @@ except ImportError:
     print("Warning: langchain not installed. Chatbot will use mock responses.")
 
 # Configuration
+# by default, it loads from a file named ".env" in the current directory
+
+# Set the API key from the environment, if not already set
+os.environ.setdefault("GROQ_API_KEY", os.getenv("GROQ_API_KEY"))
 os.environ.setdefault("SMTP_SERVER", "smtp.gmail.com")
 os.environ.setdefault("SMTP_PORT", "587")
 os.environ.setdefault("EMAIL_SENDER", "animeguy055@gmail.com")
@@ -254,10 +264,32 @@ This is an automated alert from the ReViveCare post-discharge monitoring system.
         server.quit()
         
         print(f"✅ EMAIL ALERT SENT TO DOCTOR: {doctor_email}")
+        TWILIO_ACCOUNT_SID = os.getenv("TWILIO_ACCOUNT_SID")
+        TWILIO_AUTH_TOKEN = os.getenv("TWILIO_AUTH_TOKEN")
+        TWILIO_PHONE_NUMBER = os.getenv("TWILIO_PHONE_NUMBER")  # Your Twilio phone number
+        TO_NUMBER = os.getenv("TO_NUMBER")
+            
+        client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
+            
+        call = client.calls.create(
+            to=TO_NUMBER,
+            from_=TWILIO_PHONE_NUMBER,
+            twiml=f"<Response><Say voice='alice'>This is an emergency please call {patient.name}</Say></Response>"
+        )
+            
+        context = {
+            'call_sid': call.sid,
+            'status': 'Call initiated successfully',
+            'phone_number': TO_NUMBER,
+            'message': f"IVR call is being made to say  'This is an emergency please call {patient.name}'"
+        }
         
     except Exception as e:
         print(f"⚠️ EMAIL SEND FAILED: {str(e)}")
-
+        context = {
+            'status': 'Error making call',
+            'error': str(e)
+        }
 
 @require_http_methods(["POST"])
 def chatbot_send(request):
