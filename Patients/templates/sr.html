@@ -5,7 +5,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ReViveCare - Bicep Curls</title>
+    <title>ReViveCare - Side Lateral Raise</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.1.0/uicons-regular-rounded/css/uicons-regular-rounded.css">
+    <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.1.0/uicons-solid-rounded/css/uicons-solid-rounded.css">
+    <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.1.0/uicons-bold-rounded/css/uicons-bold-rounded.css">
     <style>
         * {
             margin: 0;
@@ -13,72 +17,76 @@
             box-sizing: border-box;
         }
 
+        :root {
+            --primary-teal: #00A8A8;
+            --primary-teal-dark: #008B8B;
+            --text-dark: #2C3E50;
+            --text-gray: #6B7B8C;
+            --bg-light: #F8FBFC;
+        }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f5f7fa;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #F8FBFC 0%, #E8F4F4 100%);
+            color: var(--text-dark);
             min-height: 100vh;
         }
 
         /* Header */
         header {
-            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            background: linear-gradient(135deg, #00A8A8 0%, #4DB6AC 100%);
             color: white;
             padding: 1rem 0;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 15px rgba(0, 168, 168, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
         nav {
             max-width: 1400px;
             margin: 0 auto;
-            padding: 0 2rem;
+            padding: 0 1.5rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
         .logo {
-            font-size: 1.8rem;
-            font-weight: bold;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.6rem;
+            font-size: 1.3rem;
+            font-weight: 700;
         }
 
-        .logo-icon {
-            width: 40px;
-            height: 40px;
-            background: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #4CAF50;
+        .logo i {
             font-size: 1.5rem;
         }
 
-        .back-btn {
+        .back-link {
             background: rgba(255,255,255,0.2);
-            border: 2px solid white;
+            padding: 0.5rem 1.2rem;
+            border-radius: 25px;
             color: white;
-            padding: 0.5rem 1.5rem;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: all 0.3s ease;
             text-decoration: none;
-            display: inline-block;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
         }
 
-        .back-btn:hover {
+        .back-link:hover {
             background: white;
-            color: #4CAF50;
+            color: var(--primary-teal);
         }
 
-        /* Main Container */
+        /* Container */
         .container {
             max-width: 1400px;
             margin: 0 auto;
-            padding: 2rem;
+            padding: 2rem 1.5rem;
         }
 
         /* Exercise Layout */
@@ -93,16 +101,18 @@
         /* Video Section */
         .video-section {
             flex-shrink: 0;
+            animation: fadeInLeft 0.6s ease;
         }
 
         .video-container {
             position: relative;
             background: #000;
-            border-radius: 16px;
+            border-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+            box-shadow: 0 15px 40px rgba(0, 168, 168, 0.25);
             width: 360px;
             height: 640px;
+            border: 3px solid rgba(0, 168, 168, 0.2);
         }
 
         .video-container video {
@@ -112,159 +122,246 @@
             object-fit: cover;
         }
 
+        .video-overlay {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            right: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
 
+        .exercise-badge {
+            background: rgba(0, 168, 168, 0.95);
+            backdrop-filter: blur(10px);
+            color: white;
+            padding: 0.6rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .exercise-badge i {
+            font-size: 1rem;
+        }
 
         /* Control Panel */
         .control-panel {
             background: white;
-            border-radius: 16px;
-            padding: 2rem;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
             animation: fadeInRight 0.6s ease;
-            width: 400px;
+            width: 420px;
             flex-shrink: 0;
         }
 
-        .control-panel h2 {
-            color: #2c3e50;
-            margin-bottom: 1.5rem;
+        .panel-header {
+            margin-bottom: 2rem;
+        }
+
+        .panel-header h2 {
+            font-size: 1.5rem;
+            color: var(--text-dark);
+            margin-bottom: 0.3rem;
+            font-weight: 700;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.6rem;
+        }
+
+        .panel-header h2 i {
+            color: var(--primary-teal);
+        }
+
+        .panel-header p {
+            color: var(--text-gray);
+            font-size: 0.9rem;
         }
 
         /* Rep Counter */
         .rep-counter {
-            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
-            border-radius: 12px;
-            padding: 2rem;
+            background: linear-gradient(135deg, #00A8A8 0%, #4DB6AC 100%);
+            border-radius: 16px;
+            padding: 2.5rem;
             text-align: center;
             margin-bottom: 2rem;
-            box-shadow: 0 8px 20px rgba(76, 175, 80, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 168, 168, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .rep-counter::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
         }
 
         .rep-counter-label {
             color: rgba(255,255,255,0.9);
-            font-size: 0.9rem;
-            margin-bottom: 0.5rem;
+            font-size: 0.8rem;
+            margin-bottom: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+            position: relative;
         }
 
         .rep-count {
             color: white;
-            font-size: 4rem;
-            font-weight: bold;
+            font-size: 5rem;
+            font-weight: 800;
             line-height: 1;
             margin-bottom: 0.5rem;
+            position: relative;
         }
 
         .rep-target {
-            color: rgba(255,255,255,0.8);
-            font-size: 1.2rem;
+            color: rgba(255,255,255,0.85);
+            font-size: 1.1rem;
+            font-weight: 500;
+            position: relative;
         }
 
-        /* Set Reps */
+        /* Set Reps Section */
         .set-reps {
             margin-bottom: 2rem;
         }
 
         .set-reps label {
             display: block;
-            color: #2c3e50;
+            color: var(--text-dark);
             font-weight: 600;
-            margin-bottom: 0.8rem;
-        }
-
-        .rep-input-group {
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
             display: flex;
             align-items: center;
             gap: 0.5rem;
         }
 
+        .set-reps label i {
+            color: var(--primary-teal);
+        }
+
+        .rep-input-group {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 1rem;
+        }
+
         .rep-btn {
-            background: #e0e0e0;
-            border: none;
-            width: 45px;
-            height: 45px;
-            border-radius: 8px;
+            background: white;
+            border: 2px solid #E8F4F4;
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
             font-size: 1.5rem;
             cursor: pointer;
-            transition: all 0.3s ease;
-            color: #2c3e50;
-            font-weight: bold;
+            transition: all 0.3s;
+            color: var(--primary-teal);
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .rep-btn:hover {
-            background: #4CAF50;
+            background: var(--primary-teal);
             color: white;
+            border-color: var(--primary-teal);
             transform: scale(1.05);
         }
 
         .rep-input {
             flex: 1;
-            padding: 0.8rem;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 1.2rem;
+            padding: 1rem;
+            border: 2px solid #E8F4F4;
+            border-radius: 12px;
+            font-size: 1.3rem;
             text-align: center;
-            font-weight: bold;
-            color: #2c3e50;
-            transition: border-color 0.3s ease;
+            font-weight: 700;
+            color: var(--text-dark);
+            transition: all 0.3s;
+            font-family: 'Poppins', sans-serif;
         }
 
         .rep-input:focus {
             outline: none;
-            border-color: #4CAF50;
+            border-color: var(--primary-teal);
+            background: #F8FBFC;
         }
 
-        /* Quick Set Buttons */
+        /* Quick Sets */
         .quick-sets {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 0.5rem;
-            margin-top: 1rem;
+            gap: 0.6rem;
         }
 
         .quick-set-btn {
-            background: #f8f9fa;
-            border: 2px solid #e0e0e0;
-            padding: 0.6rem;
-            border-radius: 8px;
+            background: #F8FBFC;
+            border: 2px solid #E8F4F4;
+            padding: 0.7rem;
+            border-radius: 10px;
             cursor: pointer;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 600;
-            color: #2c3e50;
-            transition: all 0.3s ease;
+            color: var(--text-dark);
+            transition: all 0.3s;
+            font-family: 'Poppins', sans-serif;
         }
 
         .quick-set-btn:hover {
-            background: #4CAF50;
-            border-color: #4CAF50;
+            background: var(--primary-teal);
+            border-color: var(--primary-teal);
             color: white;
+            transform: translateY(-2px);
         }
 
         /* Action Buttons */
         .action-buttons {
             display: flex;
             flex-direction: column;
-            gap: 1rem;
+            gap: 0.8rem;
         }
 
         .start-btn {
-            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            background: linear-gradient(135deg, #00A8A8, #4DB6AC);
             color: white;
             border: none;
             padding: 1.2rem;
-            font-size: 1.1rem;
-            border-radius: 10px;
+            font-size: 1.05rem;
+            border-radius: 12px;
             cursor: pointer;
             font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+            transition: all 0.3s;
+            box-shadow: 0 6px 20px rgba(0, 168, 168, 0.35);
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+            text-decoration: none;
         }
 
         .start-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 168, 168, 0.45);
+        }
+
+        .start-btn i {
+            font-size: 1.1rem;
         }
 
         .reset-btn {
@@ -272,16 +369,55 @@
             color: #e74c3c;
             border: 2px solid #e74c3c;
             padding: 1rem;
-            font-size: 1rem;
-            border-radius: 10px;
+            font-size: 0.95rem;
+            border-radius: 12px;
             cursor: pointer;
             font-weight: 600;
-            transition: all 0.3s ease;
+            transition: all 0.3s;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
         }
 
         .reset-btn:hover {
             background: #e74c3c;
             color: white;
+            transform: translateY(-2px);
+        }
+
+        .reset-btn i {
+            font-size: 1rem;
+        }
+
+        /* Tips Card */
+        .tips-card {
+            background: #F8FBFC;
+            border-radius: 12px;
+            padding: 1.2rem;
+            margin-top: 1.5rem;
+            border-left: 4px solid var(--primary-teal);
+        }
+
+        .tips-card h4 {
+            font-size: 0.85rem;
+            color: var(--text-dark);
+            margin-bottom: 0.6rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .tips-card h4 i {
+            color: var(--primary-teal);
+        }
+
+        .tips-card p {
+            font-size: 0.8rem;
+            color: var(--text-gray);
+            line-height: 1.6;
         }
 
         /* Animations */
@@ -315,7 +451,7 @@
 
             .control-panel {
                 width: 100%;
-                max-width: 400px;
+                max-width: 420px;
             }
         }
 
@@ -330,11 +466,11 @@
             }
 
             .control-panel {
-                padding: 1.5rem;
+                padding: 2rem;
             }
 
             .rep-count {
-                font-size: 3rem;
+                font-size: 4rem;
             }
         }
     </style>
@@ -344,10 +480,13 @@
     <header>
         <nav>
             <div class="logo">
-                <div class="logo-icon">🏥</div>
-                <span>ReViveCare</span>
+                <i class="fi fi-sr-heart-pulse"></i>
+                ReViveCare
             </div>
-            <a href="{% url 'exercise' %}" class="back-btn">← Back to Exercises</a>
+            <a href="{% url 'exercise' %}" class="back-link">
+                <i class="fi fi-rr-angle-left"></i>
+                Back to Exercises
+            </a>
         </nav>
     </header>
 
@@ -357,31 +496,50 @@
             <!-- Video Section -->
             <div class="video-section">
                 <div class="video-container">
+                    <div class="video-overlay">
+                        <div class="exercise-badge">
+                            <i class="fi fi-sr-arms-up"></i>
+                            Side Lateral Raise
+                        </div>
+                    </div>
                     <video id="exerciseVideo" autoplay loop muted playsinline>
-    <source src="{% static 'Patients/videos/sl.mp4' %}" type="video/mp4">
-    Your browser does not support the video tag.
-</video>
+                        <source src="{% static 'Patients/videos/sl.mp4' %}" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
                 </div>
             </div>
 
             <!-- Control Panel -->
             <div class="control-panel">
-                <h2>🎯 Your Session</h2>
+                <div class="panel-header">
+                    <h2>
+                        <i class="fi fi-sr-target"></i>
+                        Your Session
+                    </h2>
+                    <p>Track your progress in real-time</p>
+                </div>
 
                 <!-- Rep Counter -->
                 <div class="rep-counter">
-                    <div class="rep-counter-label">REPS COMPLETED</div>
+                    <div class="rep-counter-label">Reps Completed</div>
                     <div class="rep-count" id="repCount">0</div>
                     <div class="rep-target">of <span id="targetReps">10</span> reps</div>
                 </div>
 
                 <!-- Set Reps -->
                 <div class="set-reps">
-                    <label>Set Your Target Reps</label>
+                    <label>
+                        <i class="fi fi-rr-settings-sliders"></i>
+                        Set Your Target Reps
+                    </label>
                     <div class="rep-input-group">
-                        <button class="rep-btn" id="decreaseBtn">−</button>
+                        <button class="rep-btn" id="decreaseBtn">
+                            <i class="fi fi-rr-minus-small"></i>
+                        </button>
                         <input type="number" class="rep-input" id="repInput" value="10" min="1" max="50">
-                        <button class="rep-btn" id="increaseBtn">+</button>
+                        <button class="rep-btn" id="increaseBtn">
+                            <i class="fi fi-rr-plus-small"></i>
+                        </button>
                     </div>
                     <div class="quick-sets">
                         <button class="quick-set-btn" onclick="setReps(5)">5 reps</button>
@@ -395,8 +553,23 @@
 
                 <!-- Action Buttons -->
                 <div class="action-buttons">
-                    <a href= "{% url 'srtwo' %}" ><button class="start-btn" id="startBtn">▶ Start Exercise</button></a>
-                    <button class="reset-btn" id="resetBtn">↺ Reset Counter</button>
+                    <a href="{% url 'srtwo' %}" class="start-btn" id="startBtn">
+                        <i class="fi fi-rr-play"></i>
+                        Start Exercise
+                    </a>
+                    <button class="reset-btn" id="resetBtn">
+                        <i class="fi fi-rr-refresh"></i>
+                        Reset Counter
+                    </button>
+                </div>
+
+                <!-- Tips Card -->
+                <div class="tips-card">
+                    <h4>
+                        <i class="fi fi-rr-bulb"></i>
+                        Pro Tip
+                    </h4>
+                    <p>Keep your core engaged and avoid using momentum. Focus on controlled movements for better results.</p>
                 </div>
             </div>
         </div>
@@ -448,14 +621,20 @@
             targetRepsDisplay.textContent = targetReps;
         }
 
-        // Start button
-        startBtn.addEventListener('click', () => {
-            if (!isExercising) {
-                isExercising = true;
-                startBtn.textContent = '✓ Rep Complete';
-                startBtn.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
-            } else {
-                incrementRep();
+        // Reset button
+        resetBtn.addEventListener('click', () => {
+            currentReps = 0;
+            repCountDisplay.textContent = '0';
+            isExercising = false;
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space') {
+                e.preventDefault();
+                if (isExercising) {
+                    incrementRep();
+                }
             }
         });
 
@@ -472,35 +651,10 @@
         }
 
         function completeExercise() {
-            startBtn.textContent = '🎉 Complete!';
-            startBtn.style.background = 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)';
-            
-            // Celebration effect
             setTimeout(() => {
                 alert('Great job! You completed all reps! 💪');
             }, 500);
         }
-
-        // Reset button
-        resetBtn.addEventListener('click', () => {
-            currentReps = 0;
-            repCountDisplay.textContent = '0';
-            isExercising = false;
-            startBtn.textContent = '▶ Start Exercise';
-            startBtn.style.background = 'linear-gradient(135deg, #4CAF50 0%, #45a049 100%)';
-        });
-
-        // Keyboard shortcuts
-        document.addEventListener('keydown', (e) => {
-            if (e.code === 'Space') {
-                e.preventDefault();
-                if (isExercising) {
-                    incrementRep();
-                } else {
-                    startBtn.click();
-                }
-            }
-        });
     </script>
 </body>
 </html>
