@@ -241,7 +241,7 @@ This project is for educational and healthcare purposes.
 
 For issues or questions:
 - Create an issue in the repository
-- Contact: animeguy055@gmail.com
+- Contact: sarthak.molu08@gmail.com
 
 ## Acknowledgments
 
