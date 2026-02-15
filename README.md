@@ -1,185 +1,255 @@
-# ReViveCare 🏥 ❤️‍🩹
+# ReviveCare - Post-Discharge Recovery Support Platform
 
-**AI-Powered Post-Discharge Recovery Support System**
+ReviveCare is an AI-powered post-discharge recovery support system that bridges the gap between hospital care and home wellness. The platform provides continuous guidance, real-time exercise tracking, and 24/7 AI health assistance to patients recovering from surgery or injury.
 
-ReViveCare is a holistic bridge between hospital care and home recovery. Designed for high-volume healthcare settings, it provides patients with continuous, non-diagnostic guidance via an AI chatbot and computer-vision-assisted physiotherapy tools. It ensures continuity of care, early detection of complications, and automated reporting for clinicians without increasing their workload.
+## Features
 
----
+### For Patients
+- **24/7 AI Health Assistant**: Multilingual chatbot providing instant answers about symptoms, medications, and recovery tips
+- **AI-Guided Exercises**: Real-time posture correction and progress tracking for rehabilitation exercises
+- **Recovery Insights**: AI-powered analysis of progress with personalized recommendations
+- **Progress Dashboard**: Track recovery milestones, workout history, and health metrics
+- **Automated Alerts**: System automatically notifies doctors when concerning symptoms are detected
 
-## 🌟 Key Features
+### For Doctors
+- **Patient Management**: Add and update patient information and recovery plans
+- **Automated Summaries**: Receive AI-generated patient progress reports via email
+- **Emergency Alerts**: Get notified immediately when patients report concerning symptoms
+- **Patient Monitoring**: Access comprehensive logs of patient activities and interactions
 
-### 🤖 Context-Aware AI Chatbot
+## Technology Stack
 
-* **Personalized Care:** Uses specific patient medical context (surgery type, discharge notes) to answer queries.
-* **Risk Assessment:** Evaluates every user interaction with a "Seriousness Score" (0.0 - 1.0).
-* **Safety First:** Strictly non-diagnostic; aims to reassure or escalate based on medical context.
-* **Powered by:** LangChain & Groq (Llama-3.3-70b).
+- **Backend**: Django 5.2.1, Python
+- **Database**: SQLite
+- **AI/ML**: 
+  - LangChain with Groq (Llama 3.3 70B)
+  - MediaPipe for pose detection
+  - OpenCV for computer vision
+- **Frontend**: HTML, CSS, JavaScript
+- **Communication**: Twilio (voice calls), SMTP (email alerts)
 
-### 🚨 Automated Escalation & Alerting
-
-* **Red Flag Detection:** If the "Seriousness Score" exceeds **0.75**, the system triggers emergency protocols.
-* **Doctor Alerts:** Sends immediate emails containing the chat transcript and patient context to the assigned doctor.
-* **Emergency Calls:** Initiates an automated **Twilio** voice call to emergency contacts/doctors for immediate attention.
-
-### 👁️ AI Physiotherapy Tracker (Computer Vision)
-
-* **Exercise:** Specialized tracking for **Side Lateral Raises**.
-* **Real-Time Correction:** Uses **MediaPipe** and **OpenCV** to track body landmarks via webcam.
-* **Form Feedback:** Detects and corrects:
-* Range of Motion (ROM).
-* Elbow straightness.
-* Shoulder shrugging (compensatory movement).
-* Left/Right arm symmetry.
-
-
-* **Metrics:** Tracks excellent/good/partial reps and calculates a "Quality Score."
-
-### 📝 Clinical Summarization
-
-* **Doctor Dashboards:** Aggregates chat logs and workout history.
-* **Auto-Summaries:** Generates concise medical summaries of the patient's home recovery period using LLMs, highlighting progress and pain patterns for the next doctor visit.
-
----
-
-## 🛠️ Tech Stack
-
-* **Backend Framework:** Django (Python)
-* **AI & LLM Orchestration:** LangChain, LangChain-Groq
-* **Computer Vision:** OpenCV (`cv2`), MediaPipe (`mp`)
-* **Communications:** Twilio (Voice Calls), SMTP (Email Alerts)
-* **Database:** SQLite (Default Django) / Postgres ready
-* **Frontend:** HTML/JS with AJAX for real-time video streaming and chat.
-
----
-
-## ⚙️ Installation
+## Installation
 
 ### Prerequisites
+- Python 3.8+
+- Webcam (for exercise tracking)
+- pip package manager
 
-* Python 3.10+
-* Webcam (for exercise tracking)
-* API Keys (Groq, Twilio, Gmail App Password)
+### Setup
 
-### 1. Clone the Repository
-
+1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/revivecare.git
-cd revivecare
-
+git clone <repository-url>
+cd ReviveCare
 ```
 
-### 2. Create Virtual Environment
-
+2. Create and activate virtual environment:
 ```bash
 python -m venv venv
-# Windows
-venv\Scripts\activate
-# Mac/Linux
-source venv/bin/activate
-
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 ```
 
-### 3. Install Dependencies
-
+3. Install dependencies:
 ```bash
-pip install django langchain-groq langchain-core twilio opencv-python mediapipe numpy python-dotenv
-
+pip install django==5.2.1
+pip install langchain-groq
+pip install opencv-python
+pip install mediapipe
+pip install numpy
+pip install twilio
+pip install python-dotenv
 ```
 
-### 4. Configure Environment Variables
-
-Create a `.env` file in the root directory:
-
+4. Create `.env` file in the ReviveCare directory:
 ```env
-# AI Configuration
-GROQ_API_KEY=your_groq_api_key_here
-
-# Email Alert Configuration
+GROQ_API_KEY=your_groq_api_key
 SMTP_SERVER=smtp.gmail.com
 SMTP_PORT=587
 EMAIL_SENDER=your_email@gmail.com
-EMAIL_PASSWORD=your_app_specific_password
-DOCTOR_EMAIL=doctor_email@example.com
-
-# Twilio Configuration (For Emergency Calls)
+EMAIL_PASSWORD=your_app_password
+DOCTOR_EMAIL=doctor_email@gmail.com
 TWILIO_ACCOUNT_SID=your_twilio_sid
-TWILIO_AUTH_TOKEN=your_twilio_auth_token
-TWILIO_PHONE_NUMBER=your_twilio_phone_number
-TO_NUMBER=emergency_contact_number
-
+TWILIO_AUTH_TOKEN=your_twilio_token
+TWILIO_PHONE_NUMBER=your_twilio_number
+TO_NUMBER=doctor_phone_number
 ```
 
-### 5. Database Migrations
-
+5. Run migrations:
 ```bash
 python manage.py makemigrations
 python manage.py migrate
-
 ```
 
-### 6. Run the Server
+6. Create superuser (optional):
+```bash
+python manage.py createsuperuser
+```
 
+7. Run the development server:
 ```bash
 python manage.py runserver
-
 ```
 
-Visit `http://127.0.0.1:8000/` in your browser.
+8. Access the application:
+- Home: http://localhost:8000/
+- Patient Login: http://localhost:8000/login/
+- Doctor Portal: http://localhost:8000/doc_port/
+- Admin Panel: http://localhost:8000/admin/
 
----
+## Usage
 
-## 📖 Usage Guide
+### For Patients
 
-### 1. Patient Authentication
+1. **Login**: Use your email address (provided by your doctor)
+2. **Dashboard**: View your recovery progress and access features
+3. **AI Chatbot**: Ask questions about your recovery, symptoms, or medications
+4. **Exercises**: Follow AI-guided rehabilitation exercises with real-time feedback
+5. **Recovery Insights**: Generate and view personalized progress reports
 
-ReViveCare uses a simplified **Email-Only** login system to reduce friction for elderly or recovering patients.
+### For Doctors
 
-* *Note:* The patient must be pre-registered in the database (via Django Admin) to log in.
+1. **Access Portal**: Navigate to the doctor portal
+2. **Add Patient**: Enter patient name, email, and medical context
+3. **Monitor**: Receive automated summaries and emergency alerts
+4. **Update Info**: Modify patient information as recovery progresses
 
-### 2. Using the Chatbot
+## Exercise Tracking
 
-* Navigate to the Chat section.
-* Ask questions like *"My stitches feel itchy, is that normal?"*
-* The AI evaluates the query against the `Patient.info` field (medical context).
-* If the system detects high urgency, it will inform the patient to contact a doctor and silently trigger backend alerts.
+The platform currently supports the following exercises with AI-powered form correction:
 
-### 3. Using the Exercise Tracker
+- **Side Lateral Raise (SLR)**: Shoulder rehabilitation with real-time angle tracking
+- **Bicep Curls (BC)**: Arm strength exercises
+- **Jumping Jacks (JJ)**: Cardio and coordination
+- **Arm Raises (AR)**: Range of motion exercises
 
-* Navigate to the **Side Lateral Raise** section.
-* Ensure your webcam is enabled and your upper body is visible.
-* Click **Start Workout**.
-* Perform the exercise. The system will count reps and warn you if your form is incorrect (e.g., "Don't Shrug!").
+### Exercise Metrics Tracked
+- Rep count and quality (Excellent/Good/Partial)
+- Joint angles and range of motion
+- Form warnings (asymmetry, shoulder elevation, elbow position)
+- Duration and completion percentage
+- Quality score based on form
 
----
+## AI Chatbot Features
 
-## 📂 Project Structure
+- **Context-Aware**: Uses patient-specific medical information provided by doctors
+- **Seriousness Scoring**: Automatically assesses symptom severity (0.0-1.0 scale)
+- **Emergency Detection**: Triggers alerts when seriousness score > 0.75
+- **Multilingual Support**: Responds in patient's preferred language
+- **Conversation History**: Maintains context across chat sessions
 
+## Database Models
+
+### Patient
+- Name, email (unique identifier)
+- Medical information and recovery context
+- AI-generated summary
+- Activity timestamps
+
+### SLS (Side Lateral Raise Workouts)
+- Patient reference
+- Rep counts (total, excellent, good, partial)
+- Duration and completion status
+- Quality metrics
+
+### Logs
+- Patient activity logs
+- Chat history
+- Exercise completion records
+- Timestamped entries
+
+## Security Considerations
+
+- Email-based authentication (no passwords stored)
+- CSRF protection enabled
+- Session-based user management
+- Environment variables for sensitive data
+- HTTPS recommended for production
+
+## API Endpoints
+
+- `/login/` - Patient authentication
+- `/patient/dashboard/` - Patient dashboard
+- `/patient/chatbot/` - AI chatbot interface
+- `/patient/chatbot/send/` - Send message to chatbot
+- `/exercise/` - Exercise selection page
+- `/sr/` - Side lateral raise tracker
+- `/sr/video_feed/` - Video stream for pose detection
+- `/sr/start/` - Start workout session
+- `/sr/save/` - Save workout results
+- `/generate-summary/` - Generate AI recovery summary
+- `/doc_port/` - Doctor portal
+- `/doctor_info/` - Add/update patient information
+
+## Development
+
+### Project Structure
 ```
-revivecare/
-├── manage.py
-├── patient/
-│   ├── models.py      # Database schemas (Patient, SLS Workout, Logs)
-│   ├── views.py       # Core logic (Chatbot, CV Pipeline, Alerts)
-│   ├── urls.py
-│   └── templates/     # HTML Interface
-├── doctor/
-│   ├── models.py     
-│   ├── views.py       
-│   ├── urls.py
-│   └── templates/
-├── requirements.txt
-└── .env
-
+ReviveCare/
+├── Doctor/              # Doctor portal app
+├── Home/                # Landing page app
+├── Patients/            # Patient features app
+│   ├── models.py        # Database models
+│   ├── views.py         # Business logic
+│   ├── templates/       # HTML templates
+│   └── static/          # Exercise videos
+├── ReviveCare/          # Project settings
+├── db.sqlite3           # Database
+├── manage.py            # Django management
+└── .env                 # Environment variables
 ```
 
+### Adding New Exercises
+
+1. Create template in `Patients/templates/`
+2. Add video processing logic in `views.py`
+3. Define metrics and thresholds
+4. Add URL pattern in `urls.py`
+5. Update exercise selection page
+
+## Troubleshooting
+
+### Camera Not Working
+- Check webcam permissions
+- Ensure no other application is using the camera
+- Verify OpenCV installation: `python -c "import cv2; print(cv2.__version__)"`
+
+### AI Chatbot Not Responding
+- Verify GROQ_API_KEY in `.env`
+- Check internet connection
+- Review console for error messages
+
+### Email Alerts Not Sending
+- Verify SMTP credentials
+- Enable "Less secure app access" or use App Password for Gmail
+- Check firewall settings
+
+## Contributing
+
+Contributions are welcome! Please follow these steps:
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test thoroughly
+5. Submit a pull request
+
+## License
+
+This project is for educational and healthcare purposes.
+
+## Support
+
+For issues or questions:
+- Create an issue in the repository
+- Contact: animeguy055@gmail.com
+
+## Acknowledgments
+
+- MediaPipe for pose detection
+- LangChain and Groq for AI capabilities
+- Django community for the framework
+- Twilio for communication services
+
 ---
 
-## ⚠️ Medical Disclaimer
-
-**ReViveCare is a support tool, not a medical device.** * The AI chatbot **does not** diagnose medical conditions or prescribe medication.
-
-* It is designed to provide information based on pre-defined medical context and general recovery guidelines.
-* In case of a medical emergency, users should always contact emergency services directly, regardless of the app's output.
-
----
-
+**Note**: This system is designed to support recovery but does not replace professional medical advice. Always consult healthcare providers for medical decisions.
