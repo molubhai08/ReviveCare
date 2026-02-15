@@ -43,6 +43,6 @@ urlpatterns = [
     , path('sr/reset/', reset_workout, name='reset_workout'),
     path('sr/status/', get_workout_status, name='get_workout_status'),
     path('sr/save/', save_workout, name='save_workout'),
-
+    path("generate-summary/", generate_and_send_summary, name="generate_and_send_summary"),
 
 ]
