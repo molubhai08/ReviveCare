@@ -1,0 +1,1382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ patient.name }} - Clinical Telemetry &amp; Exercise Prescription - ReViveCare</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.1.0/uicons-regular-rounded/css/uicons-regular-rounded.css">
+    <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.1.0/uicons-solid-rounded/css/uicons-solid-rounded.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-teal: #00A8A8;
+            --primary-teal-dark: #008B8B;
+            --primary-teal-light: #B2E5E5;
+            --accent-navy: #1E3A5F;
+            --text-dark: #2C3E50;
+            --text-gray: #6B7B8C;
+            --bg-light: #F8FBFC;
+            --white: #ffffff;
+            --danger-red: #E53E3E;
+            --gradient-teal: linear-gradient(135deg, #00A8A8 0%, #008B8B 100%);
+            --gradient-navy: linear-gradient(135deg, #1E3A5F 0%, #2C3E50 100%);
+            --shadow-card: 0 8px 30px rgba(30, 58, 95, 0.08);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-light);
+            min-height: 100vh;
+            color: var(--text-dark);
+        }
+
+        header {
+            background: var(--gradient-navy);
+            color: white;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 3px solid var(--primary-teal);
+            box-shadow: 0 4px 20px rgba(30, 58, 95, 0.25);
+        }
+
+        nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            text-decoration: none;
+            color: white;
+        }
+
+        .logo-icon {
+            width: 44px;
+            height: 44px;
+            background: var(--gradient-teal);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.3rem;
+        }
+
+        .logo-text {
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+        }
+
+        .btn-back {
+            background: rgba(255, 255, 255, 0.14);
+            border: 1.5px solid rgba(255, 255, 255, 0.35);
+            color: white;
+            text-decoration: none;
+            padding: 0.55rem 1.2rem;
+            border-radius: 50px;
+            font-size: 0.88rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            transition: all 0.2s ease;
+        }
+
+        .btn-back:hover {
+            background: var(--primary-teal);
+            border-color: var(--primary-teal);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem 2rem 4rem;
+        }
+
+        /* Patient Header Banner */
+        .patient-banner {
+            background: linear-gradient(135deg, #1E3A5F 0%, #008B8B 100%);
+            border-radius: 22px;
+            padding: 2rem 2.4rem;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin-bottom: 1.8rem;
+            box-shadow: 0 12px 35px rgba(30, 58, 95, 0.18);
+        }
+
+        .patient-identity {
+            display: flex;
+            align-items: center;
+            gap: 1.3rem;
+        }
+
+        .patient-avatar-lg {
+            width: 68px;
+            height: 68px;
+            border-radius: 18px;
+            background: white;
+            color: var(--accent-navy);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.85rem;
+            font-weight: 800;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .patient-identity h1 {
+            font-size: 1.85rem;
+            font-weight: 700;
+            margin-bottom: 0.2rem;
+        }
+
+        .patient-meta-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.2rem;
+            font-size: 0.88rem;
+            color: var(--primary-teal-light);
+        }
+
+        .banner-actions {
+            display: flex;
+            gap: 0.85rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-banner {
+            background: white;
+            color: var(--accent-navy);
+            text-decoration: none;
+            padding: 0.75rem 1.35rem;
+            border-radius: 12px;
+            font-size: 0.88rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s ease;
+            border: none;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .btn-banner:hover {
+            background: var(--primary-teal-light);
+            transform: translateY(-2px);
+        }
+
+        /* Metric Strip */
+        .telemetry-strip {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 1.15rem;
+            margin-bottom: 2rem;
+        }
+
+        .kpi-card {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 1.25rem 1.4rem;
+            box-shadow: var(--shadow-card);
+            border: 1px solid rgba(0, 168, 168, 0.12);
+        }
+
+        .kpi-card .label {
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-gray);
+            font-weight: 600;
+            margin-bottom: 0.35rem;
+            display: block;
+        }
+
+        .kpi-card .value {
+            font-size: 1.65rem;
+            font-weight: 700;
+            color: var(--accent-navy);
+        }
+
+        .kpi-card .sub {
+            font-size: 0.78rem;
+            color: var(--primary-teal-dark);
+            font-weight: 500;
+        }
+
+        /* Two-Column Grid */
+        .grid-2col {
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 1.8rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 1.8rem;
+            box-shadow: var(--shadow-card);
+            border: 1px solid rgba(0, 168, 168, 0.12);
+            margin-bottom: 1.8rem;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.9rem;
+            border-bottom: 2px solid #F0F6F8;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--accent-navy);
+            display: flex;
+            align-items: center;
+            gap: 0.55rem;
+        }
+
+        .card-title i {
+            color: var(--primary-teal);
+        }
+
+        /* AI Summary Box */
+        .summary-box {
+            background: #F4FAFB;
+            border-left: 4px solid var(--primary-teal);
+            border-radius: 12px;
+            padding: 1.25rem 1.4rem;
+            font-size: 0.9rem;
+            line-height: 1.7;
+            white-space: pre-wrap;
+            color: var(--text-dark);
+            max-height: 340px;
+            overflow-y: auto;
+        }
+
+        .context-box {
+            background: #F8FAFC;
+            border: 1px solid #E2E8F0;
+            border-radius: 12px;
+            padding: 1rem 1.2rem;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            color: var(--text-gray);
+            max-height: 220px;
+            overflow-y: auto;
+            margin-top: 1rem;
+        }
+
+        .btn-teal {
+            background: var(--gradient-teal);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            transition: all 0.2s ease;
+        }
+
+        .btn-teal:hover {
+            background: var(--accent-navy);
+        }
+
+        .btn-teal:disabled {
+            background: #CBD5E0;
+            cursor: not-allowed;
+        }
+
+        /* Custom Exercise Prescription & Video Auto-Inference Studio */
+        .studio-card {
+            background: linear-gradient(180deg, #FFFFFF 0%, #F4FBFB 100%);
+            border: 2px solid var(--primary-teal-light);
+            border-radius: 22px;
+            padding: 2rem;
+            box-shadow: 0 12px 35px rgba(0, 168, 168, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .studio-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.15fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        .video-capture-box {
+            background: var(--accent-navy);
+            border-radius: 16px;
+            padding: 1.3rem;
+            color: white;
+        }
+
+        .mode-switch {
+            display: flex;
+            background: rgba(255, 255, 255, 0.12);
+            border-radius: 10px;
+            padding: 0.3rem;
+            margin-bottom: 1rem;
+        }
+
+        .mode-btn {
+            flex: 1;
+            background: transparent;
+            color: rgba(255, 255, 255, 0.8);
+            border: none;
+            padding: 0.55rem;
+            border-radius: 8px;
+            font-size: 0.83rem;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .mode-btn.active {
+            background: var(--primary-teal);
+            color: white;
+        }
+
+        .video-preview-stage {
+            width: 100%;
+            height: 250px;
+            background: #0F2238;
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            margin-bottom: 1rem;
+            border: 1.5px solid rgba(178, 229, 229, 0.25);
+        }
+
+        .video-preview-stage video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .video-placeholder {
+            text-align: center;
+            padding: 1.5rem;
+            color: var(--primary-teal-light);
+            font-size: 0.86rem;
+        }
+
+        .video-placeholder i {
+            font-size: 2.4rem;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .video-controls-bar {
+            display: flex;
+            gap: 0.65rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+
+        .btn-studio {
+            flex: 1;
+            padding: 0.65rem 1rem;
+            border-radius: 10px;
+            border: none;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.84rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+        }
+
+        .btn-studio.upload {
+            background: rgba(255, 255, 255, 0.16);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-studio.record {
+            background: #E53E3E;
+            color: white;
+        }
+
+        .btn-studio.analyze {
+            width: 100%;
+            background: var(--gradient-teal);
+            color: white;
+            padding: 0.85rem 1.2rem;
+            font-size: 0.92rem;
+            box-shadow: 0 6px 20px rgba(0, 168, 168, 0.35);
+        }
+
+        .btn-studio.analyze:hover {
+            filter: brightness(1.08);
+        }
+
+        .kinematics-telemetry-box {
+            margin-top: 1rem;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(178, 229, 229, 0.3);
+            border-radius: 12px;
+            padding: 0.9rem 1rem;
+            font-size: 0.8rem;
+            display: none;
+        }
+
+        .kinematics-telemetry-box.show {
+            display: block;
+        }
+
+        .rom-chips {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem;
+            margin-top: 0.6rem;
+        }
+
+        .rom-chip {
+            background: rgba(0, 168, 168, 0.22);
+            padding: 0.4rem 0.65rem;
+            border-radius: 8px;
+            font-size: 0.76rem;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* Prescription Form */
+        .rx-form .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .rx-form label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--accent-navy);
+            margin-bottom: 0.35rem;
+        }
+
+        .rx-form input,
+        .rx-form textarea,
+        .rx-form select {
+            width: 100%;
+            padding: 0.78rem 1rem;
+            border: 2px solid #DCE8EC;
+            border-radius: 10px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem;
+            color: var(--text-dark);
+            background: white;
+        }
+
+        .rx-form input:focus,
+        .rx-form textarea:focus,
+        .rx-form select:focus {
+            outline: none;
+            border-color: var(--primary-teal);
+        }
+
+        .rx-row-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.85rem;
+        }
+
+        /* Prescribed Custom Exercises Grid */
+        .custom-ex-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 1.25rem;
+            margin-top: 1.2rem;
+        }
+
+        .custom-ex-card {
+            background: white;
+            border-radius: 16px;
+            border: 1px solid #DCE8EC;
+            overflow: hidden;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .custom-ex-video {
+            width: 100%;
+            height: 190px;
+            background: #10253E;
+            object-fit: cover;
+        }
+
+        .custom-ex-body {
+            padding: 1.2rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        .custom-ex-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+
+        .custom-ex-top h4 {
+            font-size: 1.05rem;
+            color: var(--accent-navy);
+            font-weight: 700;
+        }
+
+        .diff-badge {
+            padding: 0.2rem 0.65rem;
+            border-radius: 50px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .diff-badge.Easy { background: #C6F6D5; color: #22543D; }
+        .diff-badge.Medium { background: #FEFCBF; color: #744210; }
+        .diff-badge.Hard { background: #FED7D7; color: #742A2A; }
+
+        .kinematic-tag {
+            background: #F0F9F9;
+            border: 1px solid #B2E5E5;
+            color: var(--primary-teal-dark);
+            padding: 0.45rem 0.7rem;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            line-height: 1.4;
+        }
+
+        /* Workout Table */
+        .telemetry-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .telemetry-table th {
+            background: #F1F7F9;
+            color: var(--accent-navy);
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            padding: 0.85rem 1rem;
+            text-align: left;
+            border-bottom: 2px solid #E2EDF0;
+        }
+
+        .telemetry-table td {
+            padding: 0.9rem 1rem;
+            border-bottom: 1px solid #EDF2F7;
+            font-size: 0.88rem;
+        }
+
+        /* Chat Logs Feed */
+        .chat-log-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            max-height: 420px;
+            overflow-y: auto;
+            padding-right: 0.4rem;
+        }
+
+        .chat-log-item {
+            padding: 0.85rem 1.05rem;
+            border-radius: 12px;
+            font-size: 0.86rem;
+            line-height: 1.5;
+        }
+
+        .chat-log-item.patient {
+            background: #EEF6FF;
+            border-left: 4px solid #3182CE;
+        }
+
+        .chat-log-item.ai {
+            background: #E6FFFA;
+            border-left: 4px solid var(--primary-teal);
+        }
+
+        .chat-log-item.workout {
+            background: #F7FAFC;
+            border-left: 4px solid var(--accent-navy);
+            font-family: monospace;
+            white-space: pre-wrap;
+            font-size: 0.8rem;
+        }
+
+        .chat-log-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.74rem;
+            font-weight: 700;
+            color: var(--text-gray);
+            margin-bottom: 0.25rem;
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 1080px) {
+            .telemetry-strip {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .grid-2col, .studio-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="{% url 'doc_port' %}" class="logo">
+                <div class="logo-icon">
+                    <i class="fi fi-sr-heart-rate"></i>
+                </div>
+                <span class="logo-text">ReViveCare Clinical</span>
+            </a>
+            <div class="nav-actions">
+                <a href="{% url 'doc_info_page' %}?patient_id={{ patient.id }}" class="btn-back">
+                    <i class="fi fi-rr-file-pdf"></i>
+                    <span>Update PDF / Notes</span>
+                </a>
+                <a href="{% url 'doc_port' %}" class="btn-back">
+                    <i class="fi fi-rr-angle-left"></i>
+                    <span>Back to Dashboard</span>
+                </a>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <!-- Patient Header -->
+        <div class="patient-banner">
+            <div class="patient-identity">
+                <div class="patient-avatar-lg">{{ patient.name.0|upper }}</div>
+                <div>
+                    <h1>{{ patient.name }}</h1>
+                    <div class="patient-meta-row">
+                        <span><i class="fi fi-rr-envelope"></i> {{ patient.email }}</span>
+                        <span><i class="fi fi-rr-user-md"></i> Attending: Dr. {{ doctor.name }}</span>
+                        <span><i class="fi fi-rr-calendar"></i> Updated: {{ patient.updated_at|date:"M d, Y" }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="banner-actions">
+                <a href="#prescribeStudio" class="btn-banner">
+                    <i class="fi fi-sr-video-camera-alt"></i>
+                    <span>Prescribe Custom Video Exercise</span>
+                </a>
+                <a href="{% url 'doc_info_page' %}?patient_id={{ patient.id }}" class="btn-banner" style="background: rgba(255,255,255,0.18); color: white;">
+                    <i class="fi fi-rr-file-pdf"></i>
+                    <span>Upload Medical PDF</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Telemetry KPI Strip -->
+        <div class="telemetry-strip">
+            <div class="kpi-card">
+                <span class="label">Current Streak</span>
+                <div class="value">🔥 {{ telemetry.streak }}d</div>
+                <span class="sub">Active rehab days</span>
+            </div>
+            <div class="kpi-card">
+                <span class="label">Compliance Rate</span>
+                <div class="value">{{ telemetry.compliance_rate }}%</div>
+                <span class="sub">Target rep completion</span>
+            </div>
+            <div class="kpi-card">
+                <span class="label">Form Accuracy Score</span>
+                <div class="value">{{ telemetry.avg_quality }}<small style="font-size:0.9rem;">/100</small></div>
+                <span class="sub">MediaPipe pose quality</span>
+            </div>
+            <div class="kpi-card">
+                <span class="label">Total Workouts</span>
+                <div class="value">{{ telemetry.total_workouts }}</div>
+                <span class="sub">{{ telemetry.total_reps }} total reps logged</span>
+            </div>
+            <div class="kpi-card">
+                <span class="label">Custom Prescribed</span>
+                <div class="value">{{ custom_exercises|length }}</div>
+                <span class="sub">+ 4 permanent default</span>
+            </div>
+        </div>
+
+        <!-- Patient Emergency Alerts (if any) -->
+        {% if patient_alerts %}
+        <div class="card" style="border-left: 6px solid #E53E3E; background: #FFFDFD;">
+            <div class="card-header">
+                <h2 class="card-title" style="color: #C53030;">
+                    <i class="fi fi-sr-bell-ring" style="color: #E53E3E;"></i>
+                    Clinical Triage Alerts for {{ patient.name }}
+                </h2>
+            </div>
+            <div style="display: grid; gap: 0.9rem;">
+                {% for alert in patient_alerts %}
+                <div style="background: {% if alert.is_reviewed %}#F7FAFC{% else %}#FFF5F5{% endif %}; border: 1px solid {% if alert.is_reviewed %}#E2E8F0{% else %}#FEB2B2{% endif %}; border-radius: 12px; padding: 1rem 1.2rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap;">
+                    <div style="flex: 1;">
+                        <div style="display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.3rem;">
+                            <span style="background: {% if alert.is_reviewed %}#718096{% else %}#E53E3E{% endif %}; color: white; font-size: 0.74rem; font-weight: 700; padding: 0.2rem 0.65rem; border-radius: 50px;">
+                                Score: {{ alert.seriousness_score|floatformat:2 }} &bull; {% if alert.is_reviewed %}Reviewed{% else %}Pending Action{% endif %}
+                            </span>
+                            <span style="font-size: 0.78rem; color: var(--text-gray);">{{ alert.created_at|date:"M d, Y H:i" }}</span>
+                        </div>
+                        <p style="font-size: 0.88rem; margin-bottom: 0.2rem;"><strong>Query:</strong> {{ alert.user_query }}</p>
+                        <p style="font-size: 0.84rem; color: var(--text-gray);"><strong>AI Triage:</strong> {{ alert.ai_response }}</p>
+                    </div>
+                    {% if not alert.is_reviewed %}
+                    <form method="POST" action="{% url 'review_emergency_alert' alert.id %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="next" value="{% url 'patient_detail' patient.id %}">
+                        <button type="submit" class="btn-teal" style="background: var(--accent-navy);">
+                            <i class="fi fi-rr-check"></i> Mark Reviewed
+                        </button>
+                    </form>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- AI Clinical Recovery Summary & Extracted Medical Context -->
+        <div class="grid-2col">
+            <div class="card" style="margin-bottom: 0;">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <i class="fi fi-sr-sparkles"></i>
+                        AI Clinical Recovery Summary
+                    </h2>
+                    <button type="button" class="btn-teal" id="genSummaryBtn" onclick="generateDoctorSummary()">
+                        <i class="fi fi-rr-refresh"></i>
+                        <span>Generate / Refresh AI Summary</span>
+                    </button>
+                </div>
+                <div class="summary-box" id="aiSummaryContent">{% if patient.summary %}{{ patient.summary }}{% else %}No AI clinical summary generated yet. Click "Generate / Refresh AI Summary" above to synthesize {{ patient.name }}'s medical PDF context, SLS workout telemetry, and chatbot logs using Groq ({{ groq_model_name }}).{% endif %}</div>
+
+                <div style="margin-top: 1.2rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <strong style="font-size: 0.86rem; color: var(--accent-navy);">
+                            <i class="fi fi-rr-file-medical-alt" style="color: var(--primary-teal);"></i>
+                            Extracted Medical Context / Discharge Info (<code>Patient.info</code>)
+                        </strong>
+                        <a href="{% url 'doc_info_page' %}?patient_id={{ patient.id }}" style="font-size: 0.8rem; color: var(--primary-teal-dark); font-weight: 600; text-decoration: none;">
+                            Edit / Upload PDF &rarr;
+                        </a>
+                    </div>
+                    <div class="context-box">{{ patient.info }}</div>
+                </div>
+            </div>
+
+            <!-- Telemetry Charts -->
+            <div class="card" style="margin-bottom: 0;">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <i class="fi fi-sr-chart-line-up"></i>
+                        SLS Kinematic Form &amp; Rep Quality Trend
+                    </h2>
+                </div>
+                <div style="height: 290px;">
+                    <canvas id="telemetryChart"></canvas>
+                </div>
+                <div style="margin-top: 1rem; font-size: 0.82rem; color: var(--text-gray); display: flex; justify-content: space-between;">
+                    <span>Tracks Excellent / Good / Partial reps &amp; Form Quality Score</span>
+                    <span>Total Rehab Time: <strong>{{ telemetry.total_minutes }} mins</strong></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- D. Doctor-Prescribed Custom Exercises (Video Auto-Inference Studio) -->
+        <div class="studio-card" id="prescribeStudio">
+            <div class="card-header" style="border-bottom-color: rgba(0, 168, 168, 0.2);">
+                <div>
+                    <h2 class="card-title" style="font-size: 1.35rem;">
+                        <i class="fi fi-sr-video-camera-alt"></i>
+                        Prescribe Custom Rehab Exercise (MediaPipe + Groq Video Auto-Inference)
+                    </h2>
+                    <p style="font-size: 0.86rem; color: var(--text-gray); margin-top: 0.2rem;">
+                        Upload or record a short exercise demonstration video. OpenCV &amp; MediaPipe Pose track joint angles (Shoulders, Elbows, Hips, Knees) to calculate Peak ROM, and Groq (<code>{{ groq_model_name }}</code>) auto-infers the clinical prescription.
+                    </p>
+                </div>
+            </div>
+
+            <div class="studio-grid">
+                <!-- Left: Video Upload / Webcam Recorder + AI Kinematic Trigger -->
+                <div class="video-capture-box">
+                    <div class="mode-switch">
+                        <button type="button" class="mode-btn active" id="modeUploadBtn" onclick="setVideoMode('upload')">
+                            📁 Upload MP4 / WebM
+                        </button>
+                        <button type="button" class="mode-btn" id="modeCameraBtn" onclick="setVideoMode('camera')">
+                            🎥 Record Live Demo
+                        </button>
+                    </div>
+
+                    <div class="video-preview-stage">
+                        <video id="studioVideoPreview" controls playsinline style="display: none;"></video>
+                        <div class="video-placeholder" id="studioVideoPlaceholder">
+                            <i class="fi fi-sr-film"></i>
+                            <p>Select an MP4/WebM demo video or switch to "Record Live Demo" to capture from your webcam.</p>
+                        </div>
+                    </div>
+
+                    <!-- Upload Controls -->
+                    <div id="uploadControlsBar" class="video-controls-bar">
+                        <input
+                            type="file"
+                            id="videoFileInput"
+                            accept="video/mp4,video/webm,video/*"
+                            style="display: none;"
+                            onchange="handleVideoFileSelect(this)"
+                        >
+                        <button type="button" class="btn-studio upload" onclick="document.getElementById('videoFileInput').click()">
+                            <i class="fi fi-rr-folder-open"></i>
+                            <span id="selectedVideoLabel">Choose Demo Video (.mp4 / .webm)</span>
+                        </button>
+                    </div>
+
+                    <!-- Webcam Recording Controls -->
+                    <div id="cameraControlsBar" class="video-controls-bar" style="display: none;">
+                        <button type="button" class="btn-studio upload" id="startCamBtn" onclick="startWebcamStream()">
+                            <i class="fi fi-rr-camera"></i> Enable Camera
+                        </button>
+                        <button type="button" class="btn-studio record" id="recordToggleBtn" onclick="toggleWebcamRecording()" disabled>
+                            <i class="fi fi-sr-record-vinyl"></i> <span id="recordBtnText">Start 5s Demo Recording</span>
+                        </button>
+                    </div>
+
+                    <button type="button" class="btn-studio analyze" id="analyzeVideoBtn" onclick="runVideoKinematicInference()">
+                        <i class="fi fi-sr-brain-circuit"></i>
+                        <span id="analyzeBtnText">🤖 Analyze Kinematics &amp; Auto-Infer with AI</span>
+                    </button>
+
+                    <!-- Detected Kinematics Output -->
+                    <div class="kinematics-telemetry-box" id="kinematicsResultBox">
+                        <strong style="color: var(--primary-teal-light); display: block; margin-bottom: 0.3rem;">
+                            ✓ MediaPipe Pose Kinematic Profile Extracted
+                        </strong>
+                        <div id="kinematicsSummaryText" style="font-size: 0.78rem; opacity: 0.92;"></div>
+                        <div class="rom-chips" id="romChipsContainer"></div>
+                    </div>
+                </div>
+
+                <!-- Right: Review, Edit, Override & Save CustomExercise Form -->
+                <form id="prescribeForm" class="rx-form" method="POST" action="{% url 'prescribe_custom_exercise' patient.id %}" enctype="multipart/form-data" onsubmit="submitPrescriptionForm(event)">
+                    {% csrf_token %}
+                    <!-- Hidden file input synced with uploaded/recorded blob if submitted via standard form -->
+                    <div class="form-group">
+                        <label for="rx_name">Suggested Exercise Name *</label>
+                        <input
+                            type="text"
+                            id="rx_name"
+                            name="name"
+                            placeholder="Auto-filled by AI or enter exercise name (e.g., Wall Slides, Seated Knee Extensions)"
+                            required
+                        >
+                    </div>
+
+                    <div class="rx-row-3">
+                        <div class="form-group">
+                            <label for="rx_sets">Target Sets *</label>
+                            <input type="number" id="rx_sets" name="target_sets" value="3" min="1" max="10" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="rx_reps">Target Reps *</label>
+                            <input type="number" id="rx_reps" name="target_reps" value="10" min="1" max="50" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="rx_difficulty">Difficulty *</label>
+                            <select id="rx_difficulty" name="difficulty">
+                                <option value="Easy">Easy</option>
+                                <option value="Medium" selected>Medium</option>
+                                <option value="Hard">Hard</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="rx_description">Clinical Description &amp; Execution Tips *</label>
+                        <textarea
+                            id="rx_description"
+                            name="description"
+                            rows="4"
+                            placeholder="AI will auto-generate biomechanical posture cues and execution tips from the video, or type custom instructions..."
+                            required
+                        ></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="rx_kinematics">MediaPipe Kinematic Summary (<code>kinematics_summary</code>)</label>
+                        <textarea
+                            id="rx_kinematics"
+                            name="kinematics_summary"
+                            rows="2"
+                            placeholder="Peak joint ROM across Shoulders, Elbows, Hips, and Knees will appear here..."
+                        ></textarea>
+                    </div>
+
+                    <button type="submit" class="btn-teal" id="savePrescriptionBtn" style="width: 100%; justify-content: center; padding: 0.95rem; font-size: 1rem;">
+                        <i class="fi fi-sr-check-circle"></i>
+                        <span>Save &amp; Prescribe Custom Exercise to {{ patient.name }}</span>
+                    </button>
+                    <div id="rxStatusBanner" style="display:none; margin-top:0.8rem; padding:0.75rem 1rem; border-radius:10px; font-size:0.86rem; font-weight:600;"></div>
+                </form>
+            </div>
+
+            <!-- List of Already Prescribed Custom Exercises for this Patient -->
+            {% if custom_exercises %}
+            <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 2px solid #E2EDF0;">
+                <h3 style="font-size: 1.1rem; color: var(--accent-navy); margin-bottom: 0.5rem;">
+                    🌟 Currently Prescribed Custom Exercises for {{ patient.name }} ({{ custom_exercises|length }})
+                </h3>
+                <div class="custom-ex-grid">
+                    {% for ex in custom_exercises %}
+                    <div class="custom-ex-card">
+                        {% if ex.video %}
+                        <video class="custom-ex-video" controls preload="metadata">
+                            <source src="{{ ex.video.url }}">
+                        </video>
+                        {% endif %}
+                        <div class="custom-ex-body">
+                            <div class="custom-ex-top">
+                                <h4>{{ ex.name }}</h4>
+                                <span class="diff-badge {{ ex.difficulty }}">{{ ex.difficulty }}</span>
+                            </div>
+                            <div style="font-size: 0.82rem; font-weight: 600; color: var(--primary-teal-dark);">
+                                {{ ex.target_sets }} Sets &times; {{ ex.target_reps }} Reps &bull; Prescribed {{ ex.created_at|date:"M d, Y" }}
+                            </div>
+                            <p style="font-size: 0.84rem; color: var(--text-gray); line-height: 1.5;">
+                                {{ ex.description }}
+                            </p>
+                            {% if ex.kinematics_summary %}
+                            <div class="kinematic-tag">
+                                <strong>MediaPipe ROM:</strong> {{ ex.kinematics_summary }}
+                            </div>
+                            {% endif %}
+                            <form method="POST" action="{% url 'delete_custom_exercise' ex.id %}" style="margin-top: auto; text-align: right;">
+                                {% csrf_token %}
+                                <button type="submit" style="background: none; border: none; color: #E53E3E; font-size: 0.78rem; font-weight: 600; cursor: pointer;">
+                                    <i class="fi fi-rr-trash"></i> Remove Prescription
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Bottom Grid: SLS Workout History Table & Recent Chatbot Interaction Logs -->
+        <div class="grid-2col">
+            <!-- SLS Exercise Workout History -->
+            <div class="card" style="margin-bottom: 0;">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <i class="fi fi-sr-time-past"></i>
+                        SLS Exercise Workout History
+                    </h2>
+                </div>
+                {% if workouts %}
+                <div style="overflow-x: auto;">
+                    <table class="telemetry-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Exercise</th>
+                                <th>Reps</th>
+                                <th>Breakdown (★/✓/P)</th>
+                                <th>Form Score</th>
+                                <th>Duration</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for w in workouts %}
+                            <tr>
+                                <td>{{ w.date|date:"M d, Y" }}</td>
+                                <td><strong>{{ w.exercise_type }}</strong></td>
+                                <td>{{ w.total_reps }}/{{ w.target_reps }} ({{ w.completion_percentage }}%)</td>
+                                <td>
+                                    <span style="color:#2F855A; font-weight:600;">{{ w.excellent_reps }}★</span> /
+                                    <span style="color:#008B8B;">{{ w.good_reps }}✓</span> /
+                                    <span style="color:#DD6B20;">{{ w.partial_reps }}P</span>
+                                </td>
+                                <td>
+                                    <span style="background:#E6FFFA; color:#008B8B; padding:0.2rem 0.6rem; border-radius:20px; font-weight:700; font-size:0.8rem;">
+                                        {{ w.quality_score }}/100
+                                    </span>
+                                </td>
+                                <td>{{ w.duration_seconds }}s</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <p style="color: var(--text-gray); font-size: 0.9rem; padding: 1rem 0;">
+                    No exercise sessions recorded for {{ patient.name }} yet.
+                </p>
+                {% endif %}
+            </div>
+
+            <!-- Recent Chatbot Interaction Logs -->
+            <div class="card" style="margin-bottom: 0;">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <i class="fi fi-sr-messages"></i>
+                        Recent Chatbot &amp; Telemetry Logs
+                    </h2>
+                </div>
+                {% if chat_entries %}
+                <div class="chat-log-list">
+                    {% for entry in chat_entries %}
+                    <div class="chat-log-item {{ entry.type }}">
+                        <div class="chat-log-meta">
+                            <span>
+                                {% if entry.type == 'patient' %}👤 Patient Query
+                                {% elif entry.type == 'ai' %}🤖 ReViveCare AI Triage
+                                {% elif entry.type == 'workout' %}🏋️ Kinematic Workout Log
+                                {% else %}📋 Clinical Log{% endif %}
+                            </span>
+                            <span>{{ entry.timestamp }}</span>
+                        </div>
+                        <div>{{ entry.text }}</div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p style="color: var(--text-gray); font-size: 0.9rem; padding: 1rem 0;">
+                    No chatbot conversations or activity logs recorded yet.
+                </p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const CSRF_TOKEN = "{{ csrf_token }}";
+        const CHART_DATA = {{ chart_data_json|safe }};
+
+        // Render Chart.js SLS Telemetry Chart
+        (function initTelemetryChart() {
+            const ctx = document.getElementById('telemetryChart');
+            if (!ctx) return;
+
+            const labels = CHART_DATA.length
+                ? CHART_DATA.map(d => `${d.date} (${d.exercise_type.split(' ')[0]})`)
+                : ['No Sessions Yet'];
+            const qualityScores = CHART_DATA.length ? CHART_DATA.map(d => d.quality_score) : [0];
+            const completionScores = CHART_DATA.length ? CHART_DATA.map(d => d.completion_percentage) : [0];
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            type: 'line',
+                            label: 'Form Quality Score (/100)',
+                            data: qualityScores,
+                            borderColor: '#00A8A8',
+                            backgroundColor: 'rgba(0, 168, 168, 0.15)',
+                            borderWidth: 3,
+                            tension: 0.35,
+                            fill: true,
+                            yAxisID: 'y'
+                        },
+                        {
+                            type: 'bar',
+                            label: 'Completion (%)',
+                            data: completionScores,
+                            backgroundColor: 'rgba(30, 58, 95, 0.78)',
+                            borderRadius: 6,
+                            yAxisID: 'y'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            grid: { color: '#EDF2F7' }
+                        }
+                    },
+                    plugins: {
+                        legend: { position: 'top' }
+                    }
+                }
+            });
+        })();
+
+        // Generate / Refresh AI Clinical Summary
+        async function generateDoctorSummary() {
+            const btn = document.getElementById('genSummaryBtn');
+            const box = document.getElementById('aiSummaryContent');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fi fi-rr-spinner"></i> <span>Synthesizing with Groq AI...</span>';
+
+            try {
+                const resp = await fetch("{% url 'doctor_generate_summary' patient.id %}", {
+                    method: 'POST',
+                    headers: { 'X-CSRFToken': CSRF_TOKEN }
+                });
+                const data = await resp.json();
+                if (resp.ok && data.success) {
+                    box.textContent = data.summary;
+                } else {
+                    alert(data.error || 'Could not generate summary');
+                }
+            } catch (e) {
+                alert('Error generating summary: ' + e.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fi fi-rr-refresh"></i> <span>Generate / Refresh AI Summary</span>';
+            }
+        }
+
+        // Video Upload & Webcam Recording State
+        let activeVideoBlob = null;
+        let activeVideoFilename = '';
+        let mediaStream = null;
+        let mediaRecorder = null;
+        let recordedChunks = [];
+        let isRecording = false;
+
+        function setVideoMode(mode) {
+            const uploadBtn = document.getElementById('modeUploadBtn');
+            const camBtn = document.getElementById('modeCameraBtn');
+            const uploadBar = document.getElementById('uploadControlsBar');
+            const camBar = document.getElementById('cameraControlsBar');
+
+            if (mode === 'camera') {
+                uploadBtn.classList.remove('active');
+                camBtn.classList.add('active');
+                uploadBar.style.display = 'none';
+                camBar.style.display = 'flex';
+            } else {
+                camBtn.classList.remove('active');
+                uploadBtn.classList.add('active');
+                camBar.style.display = 'none';
+                uploadBar.style.display = 'flex';
+                stopWebcamStream();
+            }
+        }
+
+        function handleVideoFileSelect(input) {
+            const file = input.files && input.files[0];
+            if (!file) return;
+            activeVideoBlob = file;
+            activeVideoFilename = file.name;
+            document.getElementById('selectedVideoLabel').textContent = file.name;
+
+            const videoEl = document.getElementById('studioVideoPreview');
+            const placeholder = document.getElementById('studioVideoPlaceholder');
+            videoEl.srcObject = null;
+            videoEl.src = URL.createObjectURL(file);
+            videoEl.muted = false;
+            videoEl.style.display = 'block';
+            placeholder.style.display = 'none';
+        }
+
+        async function startWebcamStream() {
+            try {
+                mediaStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+                const videoEl = document.getElementById('studioVideoPreview');
+                const placeholder = document.getElementById('studioVideoPlaceholder');
+                videoEl.srcObject = mediaStream;
+                videoEl.muted = true;
+                videoEl.play();
+                videoEl.style.display = 'block';
+                placeholder.style.display = 'none';
+                document.getElementById('recordToggleBtn').disabled = false;
+            } catch (err) {
+                alert('Unable to access webcam: ' + err.message);
+            }
+        }
+
+        function stopWebcamStream() {
+            if (mediaStream) {
+                mediaStream.getTracks().forEach(t => t.stop());
+                mediaStream = null;
+            }
+        }
+
+        function toggleWebcamRecording() {
+            if (!mediaStream) return;
+            const recBtnText = document.getElementById('recordBtnText');
+
+            if (!isRecording) {
+                recordedChunks = [];
+                const mimeType = MediaRecorder.isTypeSupported('video/webm;codecs=vp8')
+                    ? 'video/webm;codecs=vp8'
+                    : 'video/webm';
+                mediaRecorder = new MediaRecorder(mediaStream, { mimeType });
+                mediaRecorder.ondataavailable = e => {
+                    if (e.data && e.data.size > 0) recordedChunks.push(e.data);
+                };
+                mediaRecorder.onstop = () => {
+                    const blob = new Blob(recordedChunks, { type: 'video/webm' });
+                    activeVideoBlob = blob;
+                    activeVideoFilename = 'webcam_exercise_demo.webm';
+                    stopWebcamStream();
+                    const videoEl = document.getElementById('studioVideoPreview');
+                    videoEl.srcObject = null;
+                    videoEl.src = URL.createObjectURL(blob);
+                    videoEl.controls = true;
+                    recBtnText.textContent = 'Re-Record Demo';
+                };
+                mediaRecorder.start();
+                isRecording = true;
+                recBtnText.textContent = '⏹ Stop Recording';
+            } else {
+                mediaRecorder.stop();
+                isRecording = false;
+            }
+        }
+
+        async function runVideoKinematicInference() {
+            if (!activeVideoBlob) {
+                alert('Please choose an MP4/WebM video file or record a webcam clip first.');
+                return;
+            }
+
+            const btn = document.getElementById('analyzeVideoBtn');
+            const btnText = document.getElementById('analyzeBtnText');
+            btn.disabled = true;
+            btnText.textContent = '⏳ Running MediaPipe Pose & Groq Auto-Inference...';
+
+            const formData = new FormData();
+            formData.append('video', activeVideoBlob, activeVideoFilename || 'exercise_demo.mp4');
+
+            try {
+                const resp = await fetch("{% url 'analyze_custom_exercise_video' patient.id %}", {
+                    method: 'POST',
+                    headers: { 'X-CSRFToken': CSRF_TOKEN },
+                    body: formData
+                });
+                const data = await resp.json();
+                if (resp.ok && data.success) {
+                    document.getElementById('rx_name').value = data.name || '';
+                    document.getElementById('rx_description').value = data.description || '';
+                    document.getElementById('rx_reps').value = data.target_reps || 10;
+                    document.getElementById('rx_sets').value = data.target_sets || 3;
+                    document.getElementById('rx_difficulty').value = data.difficulty || 'Medium';
+                    document.getElementById('rx_kinematics').value = data.kinematics_summary || '';
+
+                    const resultBox = document.getElementById('kinematicsResultBox');
+                    const summaryText = document.getElementById('kinematicsSummaryText');
+                    const chipsContainer = document.getElementById('romChipsContainer');
+
+                    summaryText.textContent = data.kinematics_summary;
+                    chipsContainer.innerHTML = '';
+                    if (data.joint_metrics) {
+                        Object.entries(data.joint_metrics).forEach(([joint, metrics]) => {
+                            const chip = document.createElement('div');
+                            chip.className = 'rom-chip';
+                            chip.innerHTML = `<span>${joint}</span><strong>ROM: ${metrics.peak_rom}°</strong>`;
+                            chipsContainer.appendChild(chip);
+                        });
+                    }
+                    resultBox.classList.add('show');
+                } else {
+                    alert(data.error || 'Failed to analyze video kinematics.');
+                }
+            } catch (err) {
+                alert('Error analyzing video: ' + err.message);
+            } finally {
+                btn.disabled = false;
+                btnText.textContent = '🤖 Analyze Kinematics & Auto-Infer with AI';
+            }
+        }
+
+        async function submitPrescriptionForm(event) {
+            event.preventDefault();
+            const form = document.getElementById('prescribeForm');
+            const saveBtn = document.getElementById('savePrescriptionBtn');
+            const banner = document.getElementById('rxStatusBanner');
+
+            saveBtn.disabled = true;
+            saveBtn.innerHTML = '<i class="fi fi-rr-spinner"></i> <span>Saving Prescription...</span>';
+
+            const formData = new FormData(form);
+            if (activeVideoBlob) {
+                formData.set('video', activeVideoBlob, activeVideoFilename || 'custom_exercise.mp4');
+            }
+
+            try {
+                const resp = await fetch(form.action, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': CSRF_TOKEN,
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json'
+                    },
+                    body: formData
+                });
+                const data = await resp.json();
+                if (resp.ok && data.success) {
+                    banner.style.display = 'block';
+                    banner.style.background = '#C6F6D5';
+                    banner.style.color = '#22543D';
+                    banner.textContent = `✓ Prescribed "${data.name}"! Reloading telemetry...`;
+                    setTimeout(() => window.location.reload(), 800);
+                } else {
+                    throw new Error(data.error || 'Could not save custom exercise');
+                }
+            } catch (err) {
+                banner.style.display = 'block';
+                banner.style.background = '#FED7D7';
+                banner.style.color = '#742A2A';
+                banner.textContent = '✗ ' + err.message;
+                saveBtn.disabled = false;
+                saveBtn.innerHTML = '<i class="fi fi-sr-check-circle"></i> <span>Save & Prescribe Custom Exercise</span>';
+            }
+        }
+    </script>
+</body>
+</html>

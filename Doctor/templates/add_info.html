@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Patient Info - ReViveCare</title>
+    <title>Patient Onboarding &amp; Medical PDF Extraction - ReViveCare</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.1.0/uicons-regular-rounded/css/uicons-regular-rounded.css">
+    <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.1.0/uicons-solid-rounded/css/uicons-solid-rounded.css">
     <style>
         * {
             margin: 0;
@@ -17,40 +19,37 @@
             --primary-teal-dark: #008B8B;
             --primary-teal-light: #B2E5E5;
             --accent-navy: #1E3A5F;
-            --accent-blue: #4A90A4;
             --text-dark: #2C3E50;
             --text-gray: #6B7B8C;
             --bg-light: #F8FBFC;
             --white: #ffffff;
-            --gradient-teal: linear-gradient(135deg, #00A8A8 0%, #4DB6AC 50%, #80CBC4 100%);
-            --shadow-soft: 0 4px 20px rgba(0, 168, 168, 0.15);
-            --shadow-card: 0 8px 30px rgba(0, 0, 0, 0.08);
-            --success-green: #48BB78;
+            --gradient-teal: linear-gradient(135deg, #00A8A8 0%, #008B8B 100%);
+            --gradient-navy: linear-gradient(135deg, #1E3A5F 0%, #2C3E50 100%);
             --danger-red: #E53E3E;
         }
 
         body {
             font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, var(--bg-light) 0%, #E8F4F4 100%);
+            background: linear-gradient(135deg, var(--bg-light) 0%, #E6F4F4 100%);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             color: var(--text-dark);
         }
 
-        /* Header */
         header {
-            background: var(--gradient-teal);
+            background: var(--gradient-navy);
             color: white;
             padding: 1rem 0;
-            box-shadow: 0 4px 20px rgba(0, 168, 168, 0.3);
+            box-shadow: 0 4px 20px rgba(30, 58, 95, 0.25);
             position: sticky;
             top: 0;
             z-index: 1000;
+            border-bottom: 3px solid var(--primary-teal);
         }
 
         nav {
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 0 2rem;
             display: flex;
@@ -62,171 +61,263 @@
             display: flex;
             align-items: center;
             gap: 0.8rem;
-            cursor: pointer;
+            text-decoration: none;
+            color: white;
         }
 
         .logo-icon {
-            width: 45px;
-            height: 45px;
-            background: white;
-            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            background: var(--gradient-teal);
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--primary-teal);
-            font-size: 1.4rem;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            color: white;
+            font-size: 1.35rem;
         }
 
         .logo-text {
-            font-size: 1.5rem;
+            font-size: 1.45rem;
             font-weight: 700;
-            color: white;
         }
 
         .back-btn {
-            background: rgba(255,255,255,0.2);
-            border: 2px solid rgba(255,255,255,0.5);
+            background: rgba(255, 255, 255, 0.14);
+            border: 1.5px solid rgba(255, 255, 255, 0.35);
             color: white;
-            padding: 0.7rem 1.5rem;
+            padding: 0.6rem 1.35rem;
             border-radius: 50px;
-            cursor: pointer;
-            font-size: 0.95rem;
-            transition: all 0.3s ease;
-            display: flex;
+            font-size: 0.9rem;
+            transition: all 0.25s ease;
+            display: inline-flex;
             align-items: center;
             gap: 0.5rem;
             font-weight: 500;
-            backdrop-filter: blur(10px);
             text-decoration: none;
         }
 
         .back-btn:hover {
-            background: white;
-            color: var(--primary-teal);
-            border-color: white;
-            transform: translateX(-5px);
+            background: var(--primary-teal);
+            border-color: var(--primary-teal);
         }
 
-        /* Main Container */
         .container {
             flex: 1;
-            max-width: 800px;
-            margin: 3rem auto;
-            padding: 0 2rem;
+            max-width: 880px;
+            margin: 2.5rem auto 4rem;
+            padding: 0 1.5rem;
             width: 100%;
         }
 
         .form-card {
             background: var(--white);
             border-radius: 24px;
-            padding: 3rem;
-            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.1);
-            animation: slideUp 0.6s ease;
-            border: 1px solid rgba(0, 168, 168, 0.1);
+            padding: 2.8rem;
+            box-shadow: 0 15px 50px rgba(30, 58, 95, 0.1);
+            border: 1px solid rgba(0, 168, 168, 0.14);
         }
 
         .form-header {
             text-align: center;
-            margin-bottom: 2.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-icon {
+            width: 78px;
+            height: 78px;
+            background: var(--gradient-teal);
+            border-radius: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.2rem;
+            color: white;
+            margin: 0 auto 1.1rem;
+            box-shadow: 0 10px 28px rgba(0, 168, 168, 0.32);
         }
 
         .form-header h1 {
-            font-size: 2.2rem;
-            color: var(--text-dark);
-            margin-bottom: 0.5rem;
+            font-size: 1.95rem;
+            color: var(--accent-navy);
             font-weight: 700;
+            margin-bottom: 0.35rem;
         }
 
         .form-header p {
             color: var(--text-gray);
-            font-size: 1rem;
+            font-size: 0.95rem;
         }
 
-        .form-icon {
-            width: 85px;
-            height: 85px;
-            background: var(--gradient-teal);
-            border-radius: 50%;
+        .info-card {
+            background: linear-gradient(135deg, rgba(0, 168, 168, 0.08) 0%, rgba(30, 58, 95, 0.06) 100%);
+            border-radius: 14px;
+            padding: 1.2rem 1.4rem;
+            margin-bottom: 1.8rem;
+            border-left: 4px solid var(--primary-teal);
+        }
+
+        .info-card h4 {
+            color: var(--accent-navy);
+            font-size: 0.92rem;
+            font-weight: 700;
+            margin-bottom: 0.3rem;
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-size: 2.5rem;
-            margin: 0 auto 1.5rem;
-            box-shadow: 0 10px 30px rgba(0, 168, 168, 0.35);
+            gap: 0.45rem;
         }
 
-        /* Form Styles */
+        .info-card p {
+            color: var(--text-gray);
+            font-size: 0.86rem;
+            line-height: 1.55;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.25rem;
+        }
+
         .form-group {
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
         }
 
         .form-group label {
-            display: block;
-            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+            font-size: 0.92rem;
             font-weight: 600;
             color: var(--text-dark);
-            margin-bottom: 0.6rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group label i {
+            color: var(--primary-teal);
         }
 
         .required {
             color: var(--danger-red);
         }
 
-        .form-group input,
+        .form-group input[type="text"],
+        .form-group input[type="email"],
         .form-group textarea {
             width: 100%;
-            padding: 1rem 1.2rem;
-            font-size: 1rem;
-            border: 2px solid #E8F0F0;
+            padding: 0.95rem 1.15rem;
+            font-size: 0.95rem;
+            border: 2px solid #E2EDF0;
             border-radius: 12px;
-            transition: all 0.3s ease;
+            transition: all 0.25s ease;
             font-family: 'Poppins', sans-serif;
             background: var(--bg-light);
+            color: var(--text-dark);
         }
 
         .form-group input:focus,
         .form-group textarea:focus {
             outline: none;
             border-color: var(--primary-teal);
-            box-shadow: 0 0 0 4px rgba(0, 168, 168, 0.1);
+            box-shadow: 0 0 0 4px rgba(0, 168, 168, 0.12);
             background: white;
         }
 
         .form-group textarea {
-            min-height: 160px;
+            min-height: 180px;
             resize: vertical;
+            line-height: 1.6;
+        }
+
+        /* PDF Upload Dropzone */
+        .pdf-upload-zone {
+            border: 2px dashed var(--primary-teal);
+            background: #F4FBFB;
+            border-radius: 16px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.25s ease;
+            position: relative;
+        }
+
+        .pdf-upload-zone:hover {
+            background: #E8F8F8;
+            border-color: var(--accent-navy);
+        }
+
+        .pdf-upload-icon {
+            font-size: 2.2rem;
+            color: var(--primary-teal-dark);
+            margin-bottom: 0.4rem;
+        }
+
+        .pdf-upload-zone h4 {
+            font-size: 1rem;
+            color: var(--accent-navy);
+            margin-bottom: 0.25rem;
+        }
+
+        .pdf-upload-zone p {
+            font-size: 0.83rem;
+            color: var(--text-gray);
+            margin-bottom: 0.9rem;
+        }
+
+        .pdf-actions {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-choose-pdf {
+            background: var(--accent-navy);
+            color: white;
+            padding: 0.6rem 1.3rem;
+            border-radius: 10px;
+            font-size: 0.86rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            border: none;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .btn-choose-pdf:hover {
+            background: var(--primary-teal-dark);
+        }
+
+        .pdf-status-pill {
+            display: none;
+            align-items: center;
+            gap: 0.45rem;
+            background: #E6FFFA;
+            color: #008B8B;
+            border: 1px solid #80CBC4;
+            padding: 0.45rem 0.95rem;
+            border-radius: 50px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            margin-top: 0.8rem;
+        }
+
+        .pdf-status-pill.show {
+            display: inline-flex;
         }
 
         .char-count {
-            text-align: right;
-            font-size: 0.85rem;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.82rem;
             color: var(--text-gray);
             margin-top: 0.4rem;
         }
 
-        .input-icon {
-            position: relative;
-        }
-
-        .input-icon::before {
-            content: attr(data-icon);
-            position: absolute;
-            left: 1rem;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 1.2rem;
-            color: var(--text-gray);
-            z-index: 1;
-        }
-
-        .input-icon input {
-            padding-left: 3rem;
-        }
-
-        /* Submit Button */
         .submit-section {
-            margin-top: 2.5rem;
+            margin-top: 2rem;
             text-align: center;
         }
 
@@ -234,26 +325,22 @@
             background: var(--gradient-teal);
             color: white;
             border: none;
-            padding: 1.2rem 4rem;
-            font-size: 1.1rem;
+            padding: 1.1rem 3.2rem;
+            font-size: 1.05rem;
             border-radius: 50px;
             cursor: pointer;
             font-weight: 600;
-            transition: all 0.3s ease;
+            transition: all 0.25s ease;
             box-shadow: 0 8px 25px rgba(0, 168, 168, 0.35);
             display: inline-flex;
             align-items: center;
-            gap: 0.8rem;
+            gap: 0.7rem;
             font-family: 'Poppins', sans-serif;
         }
 
         .submit-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 35px rgba(0, 168, 168, 0.45);
-        }
-
-        .submit-btn:active {
-            transform: translateY(-1px);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(0, 168, 168, 0.45);
         }
 
         .submit-btn:disabled {
@@ -263,11 +350,10 @@
             box-shadow: none;
         }
 
-        /* Loading Spinner */
         .spinner {
             display: none;
-            width: 22px;
-            height: 22px;
+            width: 20px;
+            height: 20px;
             border: 3px solid rgba(255,255,255,0.3);
             border-top-color: white;
             border-radius: 50%;
@@ -278,132 +364,41 @@
             display: inline-block;
         }
 
-        .submit-btn.loading .btn-text {
+        .alert-message {
             display: none;
-        }
-
-        /* Success Message */
-        .success-message {
-            display: none;
-            background: linear-gradient(135deg, #C6F6D5 0%, #9AE6B4 100%);
-            border: 2px solid #68D391;
-            color: #276749;
-            padding: 1.5rem;
+            padding: 1.15rem 1.4rem;
             border-radius: 14px;
-            margin-top: 1.5rem;
-            text-align: center;
-            animation: fadeIn 0.5s ease;
+            margin-top: 1.4rem;
+            text-align: left;
+            font-size: 0.92rem;
         }
 
-        .success-message.show {
+        .alert-message.show {
             display: block;
         }
 
-        .success-message h3 {
-            margin-bottom: 0.5rem;
-            font-size: 1.2rem;
-            font-weight: 600;
+        .alert-message.success {
+            background: #F0FFF4;
+            border: 1.5px solid #68D391;
+            color: #22543D;
         }
 
-        /* Error Message */
-        .error-message {
-            display: none;
-            background: linear-gradient(135deg, #FED7D7 0%, #FEB2B2 100%);
-            border: 2px solid #FC8181;
+        .alert-message.error {
+            background: #FFF5F5;
+            border: 1.5px solid #FC8181;
             color: #C53030;
-            padding: 1.5rem;
-            border-radius: 14px;
-            margin-top: 1.5rem;
-            text-align: center;
-            animation: fadeIn 0.5s ease;
-        }
-
-        .error-message.show {
-            display: block;
-        }
-
-        .error-message h3 {
-            font-weight: 600;
-            font-size: 1.2rem;
-        }
-
-        /* Info Card */
-        .info-card {
-            background: linear-gradient(135deg, rgba(0, 168, 168, 0.08) 0%, rgba(77, 182, 172, 0.08) 100%);
-            border-radius: 14px;
-            padding: 1.5rem;
-            margin-bottom: 2rem;
-            border-left: 4px solid var(--primary-teal);
-        }
-
-        .info-card h4 {
-            color: var(--primary-teal-dark);
-            font-size: 0.95rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .info-card p {
-            color: var(--text-gray);
-            font-size: 0.9rem;
-            line-height: 1.6;
-        }
-
-        /* Animations */
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
         }
 
         @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
+            to { transform: rotate(360deg); }
         }
 
-        /* Responsive */
-        @media (max-width: 768px) {
+        @media (max-width: 720px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
             .form-card {
-                padding: 2rem 1.5rem;
-                border-radius: 20px;
-            }
-
-            .form-header h1 {
-                font-size: 1.8rem;
-            }
-
-            .submit-btn {
-                width: 100%;
-                padding: 1.2rem 2rem;
-                justify-content: center;
-            }
-
-            .container {
-                margin: 2rem auto;
-            }
-
-            .form-icon {
-                width: 70px;
-                height: 70px;
-                font-size: 2rem;
+                padding: 1.8rem 1.4rem;
             }
         }
     </style>
@@ -411,12 +406,15 @@
 <body>
     <header>
         <nav>
-            <div class="logo" onclick="goHome()">
-                <div class="logo-icon">💚</div>
+            <a href="{% url 'doc_port' %}" class="logo">
+                <div class="logo-icon">
+                    <i class="fi fi-sr-heart-rate"></i>
+                </div>
                 <span class="logo-text">ReViveCare</span>
-            </div><a href = "{%url 'doc_port' %}" class="back-btn">
-                <span>←</span>
-                <span>Back to Portal</span>
+            </a>
+            <a href="{% url 'doc_port' %}" class="back-btn">
+                <i class="fi fi-rr-angle-left"></i>
+                <span>Back to Doctor Dashboard</span>
             </a>
         </nav>
     </header>
@@ -424,198 +422,231 @@
     <div class="container">
         <div class="form-card">
             <div class="form-header">
-                <div class="form-icon">👤</div>
-                <h1>Add Patient Information</h1>
-                <p>Enter patient details to create a new recovery profile</p>
+                <div class="form-icon">
+                    <i class="fi fi-sr-file-pdf"></i>
+                </div>
+                <h1>{% if edit_patient %}Update Patient &amp; Medical PDF{% else %}Onboard Patient via PDF Extraction{% endif %}</h1>
+                <p>Assigned Clinician: <strong>Dr. {{ doctor.name }}</strong> ({{ doctor.specialty }})</p>
             </div>
 
             <div class="info-card">
-                <h4>💡 Quick Tip</h4>
-                <p>Include discharge details, medical history, recovery plan, medications, and any special instructions for comprehensive patient care.</p>
+                <h4><i class="fi fi-sr-bulb"></i> Automated Clinical Context Pipeline</h4>
+                <p>
+                    Upload a discharge summary, MRI/X-ray report, or surgical note in PDF format. ReViveCare automatically extracts the plain clinical text via <code>pypdf.PdfReader</code> and links it to the patient's AI recovery chatbot and emergency triage engine.
+                </p>
             </div>
 
-            <form id="patientForm" onsubmit="submitForm(event)">
+            <form id="patientForm" onsubmit="submitForm(event)" enctype="multipart/form-data">
                 {% csrf_token %}
-                <div class="form-group">
-                    <label for="name">Patient Name <span class="required">*</span></label>
-                    <div class="input-icon" data-icon="👤">
-                        <input 
-                            type="text" 
-                            id="name" 
-                            name="name" 
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="name">
+                            <i class="fi fi-rr-user"></i>
+                            Patient Full Name <span class="required">*</span>
+                        </label>
+                        <input
+                            type="text"
+                            id="name"
+                            name="name"
                             placeholder="Enter patient's full name"
+                            value="{{ edit_patient.name|default:'' }}"
                             required
-                            autocomplete="name"
                         >
                     </div>
-                </div>
 
-                <div class="form-group">
-                    <label for="email">Email Address <span class="required">*</span></label>
-                    <div class="input-icon" data-icon="📧">
-                        <input 
-                            type="email" 
-                            id="email" 
-                            name="email" 
+                    <div class="form-group">
+                        <label for="email">
+                            <i class="fi fi-rr-envelope"></i>
+                            Patient Email Address <span class="required">*</span>
+                        </label>
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
                             placeholder="patient@example.com"
+                            value="{{ edit_patient.email|default:'' }}"
                             required
-                            autocomplete="email"
                         >
                     </div>
                 </div>
 
+                <!-- Medical PDF Upload & Live Extraction -->
                 <div class="form-group">
-                    <label for="info">Patient Information <span class="required">*</span></label>
-                    <textarea 
-                        id="info" 
-                        name="info" 
-                        placeholder="Enter discharge details, medical history, recovery plan, medications, and any special instructions..."
-                        required
-                        maxlength="3000"
+                    <label for="pdf_file">
+                        <i class="fi fi-rr-file-pdf"></i>
+                        Medical PDF Document (Discharge Summary / MRI / Clinical Notes)
+                    </label>
+                    <div class="pdf-upload-zone">
+                        <div class="pdf-upload-icon">
+                            <i class="fi fi-sr-cloud-upload-alt"></i>
+                        </div>
+                        <h4>Upload Clinical PDF for Automatic Text Extraction</h4>
+                        <p>Select a <code>.pdf</code> file — text will be extracted immediately into the clinical context below</p>
+                        <input
+                            type="file"
+                            id="pdf_file"
+                            name="pdf_file"
+                            accept=".pdf,application/pdf"
+                            style="display: none;"
+                            onchange="handlePdfSelected(this)"
+                        >
+                        <div class="pdf-actions">
+                            <button type="button" class="btn-choose-pdf" onclick="document.getElementById('pdf_file').click()">
+                                <i class="fi fi-rr-folder-open"></i>
+                                <span>Select Medical PDF</span>
+                            </button>
+                        </div>
+                        <div>
+                            <span id="pdfStatusPill" class="pdf-status-pill"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Extracted / Editable Clinical Context -->
+                <div class="form-group">
+                    <label for="info">
+                        <i class="fi fi-rr-document-signed"></i>
+                        Clinical Context &amp; Extracted Medical Summary (<code>Patient.info</code>) <span class="required">*</span>
+                    </label>
+                    <textarea
+                        id="info"
+                        name="info"
+                        placeholder="Upload a PDF above to auto-populate, or enter discharge diagnosis, post-op precautions, medications, and red-flag symptoms..."
+                        maxlength="5000"
                         oninput="updateCharCount()"
-                    ></textarea>
+                    >{{ edit_patient.info|default:'' }}</textarea>
                     <div class="char-count">
-                        <span id="charCount">0</span> / 3000 characters
+                        <span>Used immediately by the Patient AI Chatbot &amp; Triage Scoring Engine</span>
+                        <span><strong id="charCount">0</strong> / 5000 characters</span>
                     </div>
                 </div>
 
                 <div class="submit-section">
                     <button type="submit" class="submit-btn" id="submitBtn">
-                        <span class="btn-text">✓ Submit Patient Info</span>
+                        <i class="fi fi-rr-check-circle"></i>
+                        <span class="btn-text">{% if edit_patient %}Update Patient Clinical Record{% else %}Save &amp; Onboard Patient{% endif %}</span>
                         <div class="spinner"></div>
                     </button>
                 </div>
 
-                <div class="success-message" id="successMessage">
-                    <h3>✓ Success!</h3>
-                    <p>Patient information has been successfully added to the system.</p>
+                <div class="alert-message success" id="successMessage">
+                    <strong>✓ Patient Record Saved!</strong>
+                    <p id="successText">Clinical context and PDF extraction have been stored. Redirecting to patient telemetry...</p>
                 </div>
 
-                <div class="error-message" id="errorMessage">
-                    <h3>✗ Error</h3>
-                    <p id="errorText">Something went wrong. Please try again.</p>
+                <div class="alert-message error" id="errorMessage">
+                    <strong>✗ Unable to Save</strong>
+                    <p id="errorText">Something went wrong. Please verify the fields and try again.</p>
                 </div>
             </form>
         </div>
     </div>
 
     <script>
-
         function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
-        for (let cookie of cookies) {
-            cookie = cookie.trim();
-            if (cookie.startsWith(name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let cookie of cookies) {
+                    cookie = cookie.trim();
+                    if (cookie.startsWith(name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
             }
+            return cookieValue;
         }
-    }
-    return cookieValue; }
 
-        // Update character count
         function updateCharCount() {
             const textarea = document.getElementById('info');
             const charCount = document.getElementById('charCount');
             charCount.textContent = textarea.value.length;
         }
 
-        // Form submission
+        updateCharCount();
+
+        async function handlePdfSelected(input) {
+            const file = input.files && input.files[0];
+            const pill = document.getElementById('pdfStatusPill');
+            const textarea = document.getElementById('info');
+            if (!file) {
+                pill.classList.remove('show');
+                return;
+            }
+
+            pill.classList.add('show');
+            pill.innerHTML = `<i class="fi fi-rr-spinner"></i> Extracting text from "${file.name}" via pypdf...`;
+
+            const formData = new FormData();
+            formData.append('pdf_file', file);
+
+            try {
+                const resp = await fetch("{% url 'extract_pdf_api' %}", {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': getCookie('csrftoken')
+                    },
+                    body: formData
+                });
+                const data = await resp.json();
+                if (resp.ok && data.success) {
+                    const existing = textarea.value.trim();
+                    if (existing && !existing.includes(data.extracted_text)) {
+                        textarea.value = existing + "\n\n--- EXTRACTED MEDICAL PDF (" + data.filename + ") ---\n" + data.extracted_text;
+                    } else {
+                        textarea.value = data.extracted_text;
+                    }
+                    updateCharCount();
+                    pill.innerHTML = `<i class="fi fi-sr-check-circle"></i> Extracted ${data.extracted_text.length} chars from ${data.pages} page(s) of "${data.filename}"`;
+                } else {
+                    pill.innerHTML = `<i class="fi fi-rr-exclamation"></i> ${data.error || 'Could not extract text from PDF'}`;
+                }
+            } catch (err) {
+                pill.innerHTML = `<i class="fi fi-rr-info"></i> "${file.name}" attached (will extract on submit)`;
+            }
+        }
+
         async function submitForm(event) {
             event.preventDefault();
-            
+
             const submitBtn = document.getElementById('submitBtn');
             const successMessage = document.getElementById('successMessage');
             const errorMessage = document.getElementById('errorMessage');
-            
-            // Get form data
-            const formData = {
-                name: document.getElementById('name').value,
-                email: document.getElementById('email').value,
-                info: document.getElementById('info').value
-            };
+            const formEl = document.getElementById('patientForm');
 
-            // Show loading state
             submitBtn.classList.add('loading');
             submitBtn.disabled = true;
             successMessage.classList.remove('show');
             errorMessage.classList.remove('show');
 
             try {
-                // Send POST request to doctor_info endpoint
-                const csrftoken = getCookie('csrftoken');
-
-                const response = await fetch('/doctor_info', {
+                const formData = new FormData(formEl);
+                const response = await fetch("{% url 'doctor_info' %}", {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': csrftoken,
+                        'X-CSRFToken': getCookie('csrftoken')
                     },
-                    body: JSON.stringify(formData)
+                    body: formData
                 });
 
-
-                if (response.ok) {
-                    // Success
+                const result = await response.json();
+                if (response.ok && result.success) {
                     successMessage.classList.add('show');
-                    document.getElementById('patientForm').reset();
-                    updateCharCount();
-                    
-                    // Redirect after 2 seconds
                     setTimeout(() => {
-                        goBack();
-                    }, 2000);
+                        window.location.href = result.redirect_url || "{% url 'doc_port' %}";
+                    }, 1000);
                 } else {
-                    // Error from server
-                    const errorData = await response.json().catch(() => ({}));
-                    throw new Error(errorData.message || 'Failed to submit patient information');
+                    throw new Error(result.message || 'Failed to save patient record');
                 }
             } catch (error) {
-                // Show error message
                 errorMessage.classList.add('show');
                 document.getElementById('errorText').textContent = error.message;
-                console.error('Error submitting form:', error);
             } finally {
-                // Remove loading state
                 submitBtn.classList.remove('loading');
                 submitBtn.disabled = false;
             }
         }
-
-        // Navigation functions
-        function goBack() {
-            window.history.back();
-            // In production: window.location.href = '/doctor-portal';
-        }
-
-        function goHome() {
-            // window.location.href = '/';
-            alert('Returning to homepage...');
-        }
-
-        // Form validation
-        document.getElementById('patientForm').addEventListener('input', function() {
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            const info = document.getElementById('info').value;
-            const submitBtn = document.getElementById('submitBtn');
-            
-            // Enable submit button only if all fields are filled
-            if (name && email && info) {
-                submitBtn.style.opacity = '1';
-            } else {
-                submitBtn.style.opacity = '0.7';
-            }
-        });
-
-        // Auto-resize textarea
-        const textarea = document.getElementById('info');
-        textarea.addEventListener('input', function() {
-            this.style.height = 'auto';
-            this.style.height = (this.scrollHeight) + 'px';
-        });
     </script>
 </body>
 </html>

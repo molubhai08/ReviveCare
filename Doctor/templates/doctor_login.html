@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Portal Authentication - ReViveCare</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.1.0/uicons-regular-rounded/css/uicons-regular-rounded.css">
+    <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.1.0/uicons-solid-rounded/css/uicons-solid-rounded.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-teal: #00A8A8;
+            --primary-teal-dark: #008B8B;
+            --primary-teal-light: #B2E5E5;
+            --accent-navy: #1E3A5F;
+            --text-dark: #2C3E50;
+            --text-gray: #6B7B8C;
+            --bg-light: #F8FBFC;
+            --white: #ffffff;
+            --gradient-teal: linear-gradient(135deg, #00A8A8 0%, #008B8B 100%);
+            --gradient-navy: linear-gradient(135deg, #1E3A5F 0%, #2C3E50 100%);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            background: linear-gradient(135deg, #1E3A5F 0%, #008B8B 55%, #00A8A8 100%);
+            color: var(--text-dark);
+            overflow-x: hidden;
+        }
+
+        .main-wrapper {
+            display: flex;
+            width: 100%;
+            min-height: 100vh;
+            max-width: 1360px;
+            margin: 0 auto;
+            align-items: center;
+            justify-content: space-between;
+            padding: 2rem;
+            gap: 3rem;
+        }
+
+        /* Left Clinical Branding Panel */
+        .brand-panel {
+            flex: 1;
+            color: white;
+            padding: 2rem;
+        }
+
+        .brand-logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.9rem;
+            text-decoration: none;
+            color: white;
+            margin-bottom: 2.5rem;
+        }
+
+        .brand-logo-icon {
+            width: 60px;
+            height: 60px;
+            background: white;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-teal);
+            font-size: 1.8rem;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .brand-logo h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .clinical-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(178, 229, 229, 0.2);
+            border: 1px solid rgba(178, 229, 229, 0.4);
+            color: #E6FFFA;
+            padding: 0.45rem 1.1rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 1.2rem;
+        }
+
+        .brand-panel h2 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 1.2rem;
+        }
+
+        .brand-panel p {
+            font-size: 1.05rem;
+            line-height: 1.75;
+            opacity: 0.9;
+            margin-bottom: 2.5rem;
+            max-width: 520px;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            max-width: 520px;
+        }
+
+        .feature-item {
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 1.1rem 1.25rem;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+        }
+
+        .feature-item i {
+            font-size: 1.4rem;
+            color: var(--primary-teal-light);
+        }
+
+        .feature-item span {
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        /* Right Auth Card */
+        .auth-panel {
+            width: 100%;
+            max-width: 490px;
+        }
+
+        .auth-card {
+            background: var(--white);
+            border-radius: 26px;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+        }
+
+        .auth-header {
+            background: var(--gradient-navy);
+            color: white;
+            padding: 2.2rem 2rem 1.8rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .auth-icon {
+            width: 76px;
+            height: 76px;
+            background: var(--gradient-teal);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 2rem;
+            color: white;
+            box-shadow: 0 8px 25px rgba(0, 168, 168, 0.4);
+            border: 3px solid rgba(255, 255, 255, 0.25);
+        }
+
+        .auth-header h3 {
+            font-size: 1.55rem;
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+        }
+
+        .auth-header p {
+            font-size: 0.9rem;
+            color: var(--primary-teal-light);
+        }
+
+        /* Mode Switch Tabs */
+        .auth-tabs {
+            display: flex;
+            background: #EEF5F7;
+            padding: 0.4rem;
+            margin: 1.5rem 2rem 0;
+            border-radius: 14px;
+        }
+
+        .auth-tab {
+            flex: 1;
+            text-align: center;
+            padding: 0.7rem 1rem;
+            font-size: 0.92rem;
+            font-weight: 600;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            color: var(--text-gray);
+            border: none;
+            background: transparent;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .auth-tab.active {
+            background: var(--white);
+            color: var(--accent-navy);
+            box-shadow: 0 4px 12px rgba(30, 58, 95, 0.12);
+        }
+
+        .auth-body {
+            padding: 1.8rem 2rem 2.2rem;
+        }
+
+        .messages-list {
+            margin-bottom: 1.2rem;
+        }
+
+        .msg-banner {
+            padding: 0.9rem 1.1rem;
+            border-radius: 12px;
+            font-size: 0.88rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            margin-bottom: 0.6rem;
+        }
+
+        .msg-banner.error {
+            background: #FFF5F5;
+            border: 1.5px solid #FEB2B2;
+            color: #C53030;
+        }
+
+        .msg-banner.success {
+            background: #F0FFF4;
+            border: 1.5px solid #9AE6B4;
+            color: #276749;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .form-group label {
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 0.45rem;
+        }
+
+        .form-group label i {
+            color: var(--primary-teal);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.9rem 1.1rem;
+            font-size: 0.95rem;
+            border: 2px solid #E2EDF0;
+            border-radius: 12px;
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-light);
+            color: var(--text-dark);
+            transition: all 0.25s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-teal);
+            background: var(--white);
+            box-shadow: 0 0 0 4px rgba(0, 168, 168, 0.12);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .submit-btn {
+            width: 100%;
+            background: var(--gradient-teal);
+            color: white;
+            border: none;
+            padding: 1rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+            box-shadow: 0 8px 25px rgba(0, 168, 168, 0.35);
+            transition: all 0.25s ease;
+            margin-top: 0.5rem;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(0, 168, 168, 0.45);
+        }
+
+        .auth-footer {
+            margin-top: 1.4rem;
+            padding-top: 1.2rem;
+            border-top: 1px solid #E8F0F2;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            color: var(--text-gray);
+        }
+
+        .auth-footer a {
+            color: var(--primary-teal-dark);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .auth-footer a:hover {
+            text-decoration: underline;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        @media (max-width: 960px) {
+            .main-wrapper {
+                flex-direction: column;
+                justify-content: center;
+            }
+            .brand-panel {
+                text-align: center;
+                padding: 1rem 0;
+            }
+            .brand-panel p, .feature-grid {
+                margin-left: auto;
+                margin-right: auto;
+            }
+        }
+
+        @media (max-width: 520px) {
+            .form-row, .feature-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-wrapper">
+        <!-- Left Clinical Branding -->
+        <div class="brand-panel">
+            <a href="{% url 'home' %}" class="brand-logo">
+                <div class="brand-logo-icon">
+                    <i class="fi fi-sr-heart-rate"></i>
+                </div>
+                <h1>ReViveCare</h1>
+            </a>
+            <div>
+                <span class="clinical-badge">
+                    <i class="fi fi-sr-stethoscope"></i>
+                    Clinical Rehabilitation Command Center
+                </span>
+            </div>
+            <h2>Doctor &amp; Clinician Telemetry Portal</h2>
+            <p>
+                Onboard patients via automated medical PDF extraction, prescribe AI-analyzed custom physiotherapy exercises with MediaPipe kinematics, and respond to real-time triage alerts.
+            </p>
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <i class="fi fi-sr-file-pdf"></i>
+                    <span>Instant PDF Clinical Extraction</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fi fi-sr-video-camera-alt"></i>
+                    <span>MediaPipe Video Auto-Inference</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fi fi-sr-bell-ring"></i>
+                    <span>Real-Time Red Flag Triage Feed</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fi fi-sr-chart-histogram"></i>
+                    <span>SLS Kinematic Adherence Telemetry</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Auth Panel -->
+        <div class="auth-panel">
+            <div class="auth-card">
+                <div class="auth-header">
+                    <div class="auth-icon">
+                        <i class="fi fi-sr-user-md"></i>
+                    </div>
+                    <h3>Doctor Portal Access</h3>
+                    <p>Passwordless Email-Only Clinical Authentication</p>
+                </div>
+
+                <div class="auth-tabs">
+                    <button type="button" id="tabLoginBtn" class="auth-tab {% if mode != 'register' %}active{% endif %}" onclick="switchAuthTab('login')">
+                        Sign In (Email Only)
+                    </button>
+                    <button type="button" id="tabRegisterBtn" class="auth-tab {% if mode == 'register' %}active{% endif %}" onclick="switchAuthTab('register')">
+                        Register New Doctor
+                    </button>
+                </div>
+
+                <div class="auth-body">
+                    {% if messages %}
+                    <div class="messages-list">
+                        {% for message in messages %}
+                        <div class="msg-banner {% if message.tags == 'error' %}error{% else %}success{% endif %}">
+                            <i class="fi {% if message.tags == 'error' %}fi-rr-exclamation{% else %}fi-rr-check-circle{% endif %}"></i>
+                            <span>{{ message }}</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    <!-- Email-Only Login Form -->
+                    <form id="loginFormSection" method="POST" action="{% url 'doctor_login' %}" class="{% if mode == 'register' %}hidden{% endif %}">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="login_email">
+                                <i class="fi fi-rr-envelope"></i>
+                                Registered Clinical Email
+                            </label>
+                            <input
+                                type="email"
+                                id="login_email"
+                                name="email"
+                                class="form-control"
+                                placeholder="dr.name@hospital.org"
+                                value="{{ prefill_email|default:'' }}"
+                                required
+                                autocomplete="email"
+                            >
+                        </div>
+
+                        <button type="submit" class="submit-btn">
+                            <span>Access Doctor Dashboard</span>
+                            <i class="fi fi-rr-arrow-right"></i>
+                        </button>
+                    </form>
+
+                    <!-- Email-Only Doctor Registration Form -->
+                    <form id="registerFormSection" method="POST" action="{% url 'doctor_register' %}" class="{% if mode != 'register' %}hidden{% endif %}">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="reg_name">
+                                <i class="fi fi-rr-user-md"></i>
+                                Full Name *
+                            </label>
+                            <input
+                                type="text"
+                                id="reg_name"
+                                name="name"
+                                class="form-control"
+                                placeholder="e.g., Aarav Mehta"
+                                value="{{ prefill_name|default:'' }}"
+                                required
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label for="reg_email">
+                                <i class="fi fi-rr-envelope"></i>
+                                Clinical Email Address *
+                            </label>
+                            <input
+                                type="email"
+                                id="reg_email"
+                                name="email"
+                                class="form-control"
+                                placeholder="dr.mehta@hospital.org"
+                                value="{{ prefill_email|default:'' }}"
+                                required
+                            >
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="reg_specialty">
+                                    <i class="fi fi-rr-stethoscope"></i>
+                                    Specialty *
+                                </label>
+                                <input
+                                    type="text"
+                                    id="reg_specialty"
+                                    name="specialty"
+                                    class="form-control"
+                                    placeholder="Orthopedic Rehab"
+                                    value="{{ prefill_specialty|default:'Orthopedic & Physiotherapy Specialist' }}"
+                                    required
+                                >
+                            </div>
+
+                            <div class="form-group">
+                                <label for="reg_hospital">
+                                    <i class="fi fi-rr-hospital"></i>
+                                    Hospital / Clinic *
+                                </label>
+                                <input
+                                    type="text"
+                                    id="reg_hospital"
+                                    name="hospital"
+                                    class="form-control"
+                                    placeholder="City General Hospital"
+                                    value="{{ prefill_hospital|default:'ReViveCare Medical Center' }}"
+                                    required
+                                >
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="reg_phone">
+                                <i class="fi fi-rr-phone-call"></i>
+                                Contact Phone (Optional)
+                            </label>
+                            <input
+                                type="text"
+                                id="reg_phone"
+                                name="phone"
+                                class="form-control"
+                                placeholder="+91 98765 43210"
+                            >
+                        </div>
+
+                        <button type="submit" class="submit-btn">
+                            <span>Create Profile &amp; Enter Portal</span>
+                            <i class="fi fi-rr-check"></i>
+                        </button>
+                    </form>
+
+                    <div class="auth-footer">
+                        <a href="{% url 'home' %}"><i class="fi fi-rr-angle-left"></i> Back to Home</a>
+                        <a href="{% url 'login' %}">Patient Login &rarr;</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchAuthTab(mode) {
+            const loginForm = document.getElementById('loginFormSection');
+            const registerForm = document.getElementById('registerFormSection');
+            const tabLogin = document.getElementById('tabLoginBtn');
+            const tabRegister = document.getElementById('tabRegisterBtn');
+
+            if (mode === 'register') {
+                loginForm.classList.add('hidden');
+                registerForm.classList.remove('hidden');
+                tabLogin.classList.remove('active');
+                tabRegister.classList.add('active');
+            } else {
+                registerForm.classList.add('hidden');
+                loginForm.classList.remove('hidden');
+                tabRegister.classList.remove('active');
+                tabLogin.classList.add('active');
+            }
+        }
+    </script>
+</body>
+</html>

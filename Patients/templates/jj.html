@@ -1,506 +1,653 @@
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ReViveCare - Bicep Curls</title>
+    <title>ReViveCare Studio — Modified Jumping Jacks AI Tracker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.1.0/uicons-regular-rounded/css/uicons-regular-rounded.css">
+    <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.1.0/uicons-solid-rounded/css/uicons-solid-rounded.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary-teal: #00A8A8;
+            --primary-teal-dark: #008B8B;
+            --primary-teal-light: #E0F5F5;
+            --deep-navy: #1E3A5F;
+            --navy-dark: #0F233C;
+            --bg-soft: #F8FBFC;
+            --text-dark: #1E3A5F;
+            --text-muted: #64748B;
+            --card-bg: #FFFFFF;
+            --excellent-green: #10B981;
+            --good-teal: #0EA5E9;
+            --partial-amber: #F59E0B;
+            --danger-red: #EF4444;
+            --gradient-brand: linear-gradient(135deg, #00A8A8 0%, #008B8B 50%, #1E3A5F 100%);
+            --gradient-teal: linear-gradient(135deg, #00A8A8 0%, #008B8B 100%);
+            --shadow-studio: 0 20px 50px rgba(30, 58, 95, 0.12);
+            --shadow-glow: 0 0 28px rgba(0, 168, 168, 0.25);
         }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f5f7fa;
-            min-height: 100vh;
-        }
-
-        /* Header */
+        body { font-family: 'Poppins', sans-serif; background: var(--bg-soft); color: var(--text-dark); min-height: 100vh; }
         header {
-            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
-            color: white;
-            padding: 1rem 0;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            background: var(--gradient-brand); color: #fff; padding: 0.9rem 0;
+            box-shadow: 0 4px 24px rgba(30, 58, 95, 0.2); position: sticky; top: 0; z-index: 100;
         }
-
         nav {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            max-width: 1480px; margin: 0 auto; padding: 0 2rem;
+            display: flex; justify-content: space-between; align-items: center;
         }
-
-        .logo {
-            font-size: 1.8rem;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
+        .brand { display: flex; align-items: center; gap: 0.85rem; }
+        .brand-icon {
+            width: 42px; height: 42px; border-radius: 12px;
+            background: rgba(255, 255, 255, 0.18); border: 1px solid rgba(255, 255, 255, 0.3);
+            display: flex; align-items: center; justify-content: center; font-size: 1.25rem;
         }
-
-        .logo-icon {
-            width: 40px;
-            height: 40px;
-            background: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #4CAF50;
-            font-size: 1.5rem;
+        .brand-text { font-size: 1.35rem; font-weight: 700; }
+        .brand-badge {
+            font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px;
+            background: rgba(255, 255, 255, 0.16); padding: 0.25rem 0.65rem;
+            border-radius: 999px; font-weight: 600; margin-left: 0.4rem;
         }
-
-        .back-btn {
-            background: rgba(255,255,255,0.2);
-            border: 2px solid white;
-            color: white;
-            padding: 0.5rem 1.5rem;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-block;
+        .nav-actions { display: flex; align-items: center; gap: 0.85rem; }
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.14); border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #fff; padding: 0.55rem 1.25rem; border-radius: 999px;
+            font-size: 0.88rem; font-weight: 600; text-decoration: none;
+            display: inline-flex; align-items: center; gap: 0.5rem; cursor: pointer; font-family: inherit;
         }
-
-        .back-btn:hover {
-            background: white;
-            color: #4CAF50;
+        .nav-btn:hover { background: #fff; color: var(--deep-navy); }
+        .studio-container { max-width: 1480px; margin: 0 auto; padding: 1.5rem 2rem 2.5rem; }
+        .studio-title-bar { margin-bottom: 1.25rem; }
+        .studio-title h1 { font-size: 1.75rem; font-weight: 700; color: var(--deep-navy); display: flex; align-items: center; gap: 0.65rem; }
+        .studio-title p { color: var(--text-muted); font-size: 0.92rem; margin-top: 0.2rem; }
+        .studio-grid { display: grid; grid-template-columns: 1fr 410px; gap: 1.75rem; align-items: start; }
+        .video-studio-card {
+            background: var(--navy-dark); border-radius: 24px; padding: 0.75rem;
+            box-shadow: var(--shadow-studio), var(--shadow-glow);
+            border: 2px solid rgba(0, 168, 168, 0.35); position: relative;
         }
-
-        /* Main Container */
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 2rem;
+        .video-viewport {
+            position: relative; width: 100%; aspect-ratio: 16 / 9;
+            background: radial-gradient(circle at center, #1E3A5F 0%, #091526 100%);
+            border-radius: 18px; overflow: hidden;
         }
-
-        /* Exercise Layout */
-        .exercise-layout {
-            display: flex;
-            gap: 2rem;
-            align-items: center;
-            justify-content: center;
-            min-height: calc(100vh - 120px);
+        .video-feed { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .pip-demo {
+            position: absolute; top: 4.2rem; right: 1.25rem; width: 190px;
+            border-radius: 14px; overflow: hidden; border: 2px solid rgba(0, 168, 168, 0.7);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45); background: #000; z-index: 25;
         }
-
-        /* Video Section */
-        .video-section {
-            flex-shrink: 0;
+        .pip-demo.hidden { display: none; }
+        .pip-demo video { width: 100%; height: 120px; object-fit: cover; display: block; }
+        .pip-label {
+            background: rgba(15, 35, 60, 0.9); color: #fff; font-size: 0.68rem;
+            font-weight: 600; padding: 0.25rem 0.6rem; text-align: center; text-transform: uppercase;
         }
-
-        .video-container {
-            position: relative;
-            background: #000;
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
-            width: 360px;
-            height: 640px;
+        .hud-top-bar {
+            position: absolute; top: 1.15rem; left: 1.25rem; right: 1.25rem;
+            display: flex; justify-content: space-between; align-items: flex-start;
+            pointer-events: none; z-index: 20;
         }
-
-        .video-container video {
-            width: 100%;
-            height: 100%;
-            display: block;
-            object-fit: cover;
+        .camera-pill, .timer-pill {
+            background: rgba(15, 35, 60, 0.72); backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.18); color: #fff;
+            padding: 0.45rem 0.95rem; border-radius: 999px; font-size: 0.78rem;
+            font-weight: 600; display: inline-flex; align-items: center; gap: 0.5rem;
         }
-
-
-
-        /* Control Panel */
-        .control-panel {
-            background: white;
-            border-radius: 16px;
-            padding: 2rem;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-            animation: fadeInRight 0.6s ease;
-            width: 400px;
-            flex-shrink: 0;
+        .live-dot {
+            width: 9px; height: 9px; border-radius: 50%; background: var(--excellent-green);
+            box-shadow: 0 0 10px var(--excellent-green); animation: pulseDot 1.6s infinite;
         }
-
-        .control-panel h2 {
-            color: #2c3e50;
-            margin-bottom: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
+        @keyframes pulseDot { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.3); opacity: 0.55; } }
+        .hud-center-stack { display: flex; flex-direction: column; align-items: center; gap: 0.55rem; }
+        .stage-pill {
+            background: rgba(15, 35, 60, 0.78); backdrop-filter: blur(16px);
+            border: 1px solid rgba(0, 168, 168, 0.55); color: #fff;
+            padding: 0.5rem 1.35rem; border-radius: 999px; font-size: 0.88rem;
+            font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase;
+            display: inline-flex; align-items: center; gap: 0.55rem;
         }
-
-        /* Rep Counter */
-        .rep-counter {
-            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
-            border-radius: 12px;
-            padding: 2rem;
-            text-align: center;
-            margin-bottom: 2rem;
-            box-shadow: 0 8px 20px rgba(76, 175, 80, 0.3);
+        .stage-pill.stage-up { background: rgba(16, 185, 129, 0.88); box-shadow: 0 0 22px rgba(16, 185, 129, 0.45); }
+        .stage-pill.stage-down { background: rgba(0, 168, 168, 0.85); }
+        .warning-pill {
+            background: rgba(245, 158, 11, 0.92); backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5); color: #fff;
+            padding: 0.48rem 1.2rem; border-radius: 999px; font-size: 0.82rem;
+            font-weight: 600; display: none; align-items: center; gap: 0.45rem;
         }
-
-        .rep-counter-label {
-            color: rgba(255,255,255,0.9);
-            font-size: 0.9rem;
-            margin-bottom: 0.5rem;
+        .warning-pill.active { display: inline-flex; }
+        .hud-bottom-bar {
+            position: absolute; bottom: 1.15rem; left: 1.25rem; right: 1.25rem;
+            display: flex; justify-content: space-between; align-items: flex-end;
+            pointer-events: none; z-index: 20;
         }
-
-        .rep-count {
-            color: white;
-            font-size: 4rem;
-            font-weight: bold;
-            line-height: 1;
-            margin-bottom: 0.5rem;
+        .angle-badge {
+            background: rgba(15, 35, 60, 0.74); backdrop-filter: blur(16px);
+            border: 1px solid rgba(0, 168, 168, 0.42); border-radius: 16px;
+            padding: 0.65rem 1.05rem; color: #fff; min-width: 170px;
         }
-
-        .rep-target {
-            color: rgba(255,255,255,0.8);
-            font-size: 1.2rem;
+        .angle-badge-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.8px; color: #80CBC4; font-weight: 600; }
+        .angle-badge-value { font-size: 1.55rem; font-weight: 800; line-height: 1.1; }
+        .angle-badge-sub { font-size: 0.72rem; color: rgba(255, 255, 255, 0.78); margin-top: 0.1rem; }
+        .telemetry-panel {
+            background: var(--card-bg); border-radius: 24px; padding: 1.65rem;
+            box-shadow: var(--shadow-studio); border: 1px solid rgba(0, 168, 168, 0.14);
+            display: flex; flex-direction: column; gap: 1.35rem;
         }
-
-        /* Set Reps */
-        .set-reps {
-            margin-bottom: 2rem;
+        .ring-section {
+            display: flex; align-items: center; gap: 1.35rem;
+            background: linear-gradient(135deg, #F0FAFA 0%, #F8FBFC 100%);
+            padding: 1.15rem; border-radius: 20px; border: 1px solid rgba(0, 168, 168, 0.18);
         }
-
-        .set-reps label {
-            display: block;
-            color: #2c3e50;
-            font-weight: 600;
-            margin-bottom: 0.8rem;
+        .ring-wrapper { position: relative; width: 118px; height: 118px; flex-shrink: 0; }
+        .progress-ring { transform: rotate(-90deg); width: 118px; height: 118px; }
+        .progress-ring-bg { fill: none; stroke: #D5EFEF; stroke-width: 10; }
+        .progress-ring-fill {
+            fill: none; stroke: url(#tealGradient); stroke-width: 10; stroke-linecap: round;
+            stroke-dasharray: 301.59; stroke-dashoffset: 301.59; transition: stroke-dashoffset 0.4s ease;
         }
-
-        .rep-input-group {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
+        .ring-center-text { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .ring-reps { font-size: 1.85rem; font-weight: 800; color: var(--deep-navy); line-height: 1; }
+        .ring-target { font-size: 0.75rem; font-weight: 600; color: var(--text-muted); margin-top: 0.15rem; }
+        .ring-info h3 { font-size: 1.05rem; font-weight: 700; color: var(--deep-navy); margin-bottom: 0.25rem; }
+        .ring-info p { font-size: 0.8rem; color: var(--text-muted); line-height: 1.4; }
+        .completion-chip {
+            display: inline-block; margin-top: 0.5rem; background: var(--primary-teal-light);
+            color: var(--primary-teal-dark); font-size: 0.75rem; font-weight: 700; padding: 0.25rem 0.7rem; border-radius: 999px;
         }
-
-        .rep-btn {
-            background: #e0e0e0;
-            border: none;
-            width: 45px;
-            height: 45px;
-            border-radius: 8px;
-            font-size: 1.5rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            color: #2c3e50;
-            font-weight: bold;
+        .stepper-section { background: var(--bg-soft); border-radius: 16px; padding: 1rem 1.15rem; border: 1px solid #E2E8F0; }
+        .section-label {
+            font-size: 0.76rem; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-muted);
+            font-weight: 700; margin-bottom: 0.65rem; display: flex; justify-content: space-between; align-items: center;
         }
-
-        .rep-btn:hover {
-            background: #4CAF50;
-            color: white;
-            transform: scale(1.05);
+        .stepper-controls { display: flex; align-items: center; gap: 0.65rem; margin-bottom: 0.7rem; }
+        .step-btn {
+            width: 40px; height: 40px; border-radius: 12px; border: 1px solid #CBD5E1;
+            background: #fff; color: var(--deep-navy); font-size: 1.2rem; font-weight: 700; cursor: pointer;
         }
-
-        .rep-input {
-            flex: 1;
-            padding: 0.8rem;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 1.2rem;
-            text-align: center;
-            font-weight: bold;
-            color: #2c3e50;
-            transition: border-color 0.3s ease;
+        .step-input {
+            flex: 1; height: 40px; text-align: center; font-size: 1.15rem; font-weight: 700;
+            color: var(--deep-navy); border: 1px solid #CBD5E1; border-radius: 12px; font-family: inherit;
         }
-
-        .rep-input:focus {
-            outline: none;
-            border-color: #4CAF50;
+        .quick-chips { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem; }
+        .chip-btn {
+            padding: 0.42rem 0; border-radius: 10px; border: 1px solid #CBD5E1;
+            background: #fff; color: var(--deep-navy); font-size: 0.8rem; font-weight: 600; cursor: pointer; font-family: inherit;
         }
-
-        /* Quick Set Buttons */
-        .quick-sets {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 0.5rem;
-            margin-top: 1rem;
+        .chip-btn.active, .chip-btn:hover:not(:disabled) { background: var(--primary-teal); color: #fff; border-color: var(--primary-teal); }
+        .form-breakdown { display: flex; flex-direction: column; gap: 0.7rem; }
+        .quality-row { background: var(--bg-soft); border-radius: 12px; padding: 0.65rem 0.9rem; border: 1px solid #E2E8F0; }
+        .quality-row-header { display: flex; justify-content: space-between; align-items: center; font-size: 0.82rem; font-weight: 600; margin-bottom: 0.35rem; }
+        .quality-tag { display: inline-flex; align-items: center; gap: 0.45rem; }
+        .dot { width: 9px; height: 9px; border-radius: 50%; }
+        .dot-excellent { background: var(--excellent-green); }
+        .dot-good { background: var(--good-teal); }
+        .dot-partial { background: var(--partial-amber); }
+        .bar-track { width: 100%; height: 7px; background: #E2E8F0; border-radius: 999px; overflow: hidden; }
+        .bar-fill { height: 100%; border-radius: 999px; width: 0%; transition: width 0.35s ease; }
+        .fill-excellent { background: var(--excellent-green); }
+        .fill-good { background: var(--good-teal); }
+        .fill-partial { background: var(--partial-amber); }
+        .meters-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+        .meter-card { background: var(--bg-soft); border: 1px solid #E2E8F0; border-radius: 14px; padding: 0.75rem 0.85rem; }
+        .meter-header { display: flex; justify-content: space-between; align-items: center; font-size: 0.74rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.4rem; }
+        .meter-val { font-weight: 700; color: var(--deep-navy); font-size: 0.82rem; }
+        .meter-fill-teal { background: var(--gradient-teal); }
+        .studio-actions { display: flex; gap: 0.75rem; }
+        .btn-studio-start {
+            flex: 1; background: var(--gradient-teal); color: #fff; border: none;
+            padding: 0.95rem 1.25rem; border-radius: 14px; font-size: 0.98rem; font-weight: 700;
+            cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 0.55rem; font-family: inherit;
         }
-
-        .quick-set-btn {
-            background: #f8f9fa;
-            border: 2px solid #e0e0e0;
-            padding: 0.6rem;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: #2c3e50;
-            transition: all 0.3s ease;
+        .btn-studio-reset {
+            background: #FEE2E2; color: var(--danger-red); border: 1px solid #FECACA;
+            padding: 0.95rem 1.15rem; border-radius: 14px; font-size: 0.92rem; font-weight: 700; cursor: pointer; font-family: inherit;
         }
-
-        .quick-set-btn:hover {
-            background: #4CAF50;
-            border-color: #4CAF50;
-            color: white;
+        .modal {
+            display: none; position: fixed; inset: 0; background: rgba(15, 35, 60, 0.75);
+            backdrop-filter: blur(8px); z-index: 1000; align-items: center; justify-content: center; padding: 1.5rem;
         }
-
-        /* Action Buttons */
-        .action-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
+        .modal.active { display: flex; }
+        .modal-card { background: #fff; border-radius: 28px; max-width: 520px; width: 100%; padding: 2.25rem; text-align: center; }
+        .modal-badge {
+            width: 68px; height: 68px; border-radius: 20px; background: var(--primary-teal-light);
+            color: var(--primary-teal-dark); display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto 1rem;
         }
-
-        .start-btn {
-            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
-            color: white;
-            border: none;
-            padding: 1.2rem;
-            font-size: 1.1rem;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
-        }
-
-        .start-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
-        }
-
-        .reset-btn {
-            background: white;
-            color: #e74c3c;
-            border: 2px solid #e74c3c;
-            padding: 1rem;
-            font-size: 1rem;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .reset-btn:hover {
-            background: #e74c3c;
-            color: white;
-        }
-
-        /* Animations */
-        @keyframes fadeInLeft {
-            from {
-                opacity: 0;
-                transform: translateX(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        @keyframes fadeInRight {
-            from {
-                opacity: 0;
-                transform: translateX(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        /* Responsive */
-        @media (max-width: 1024px) {
-            .exercise-layout {
-                flex-direction: column;
-            }
-
-            .control-panel {
-                width: 100%;
-                max-width: 400px;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                padding: 1rem;
-            }
-
-            .video-container {
-                width: 300px;
-                height: 533px;
-            }
-
-            .control-panel {
-                padding: 1.5rem;
-            }
-
-            .rep-count {
-                font-size: 3rem;
-            }
-        }
+        .summary-kpi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.85rem; margin: 1.5rem 0; }
+        .kpi-box { background: var(--bg-soft); border: 1px solid #E2E8F0; border-radius: 16px; padding: 0.95rem 0.6rem; }
+        .kpi-box .kpi-val { font-size: 1.55rem; font-weight: 800; color: var(--primary-teal-dark); }
+        .kpi-box .kpi-lbl { font-size: 0.72rem; text-transform: uppercase; color: var(--text-muted); font-weight: 600; }
+        .summary-breakdown-list { background: var(--bg-soft); border-radius: 16px; padding: 1rem 1.25rem; margin-bottom: 1.25rem; text-align: left; }
+        .summary-line { display: flex; justify-content: space-between; padding: 0.45rem 0; font-size: 0.88rem; border-bottom: 1px solid #E2E8F0; }
+        .summary-line:last-child { border-bottom: none; }
+        .save-banner { padding: 0.7rem 1rem; border-radius: 12px; font-size: 0.84rem; font-weight: 600; margin-bottom: 1.2rem; }
+        .save-banner.saving { background: #E0F2FE; color: #0369A1; }
+        .save-banner.success { background: #DCFCE7; color: #15803D; }
+        .save-banner.error { background: #FEE2E2; color: #B91C1C; }
+        @media (max-width: 1120px) { .studio-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
-    <!-- Header -->
     <header>
         <nav>
-            <div class="logo">
-                <div class="logo-icon">🏥</div>
-                <span>ReViveCare</span>
+            <div class="brand">
+                <div class="brand-icon"><i class="fi fi-sr-heart-pulse"></i></div>
+                <div>
+                    <span class="brand-text">ReViveCare</span>
+                    <span class="brand-badge">AI Rehab Studio</span>
+                </div>
             </div>
-            <a href="{% url 'exercise' %}" class="back-btn">← Back to Exercises</a>
+            <div class="nav-actions">
+                <button type="button" id="togglePipBtn" class="nav-btn">
+                    <i class="fi fi-rr-play-alt"></i> Demo Guide
+                </button>
+                <a href="{% url 'sr' %}" class="nav-btn">
+                    <i class="fi fi-rr-chart-histogram"></i> Progress History
+                </a>
+                <a href="{% url 'exercise' %}" class="nav-btn">
+                    <i class="fi fi-rr-arrow-small-left"></i> All Exercises
+                </a>
+            </div>
         </nav>
     </header>
 
-    <!-- Main Content -->
-    <div class="container">
-        <div class="exercise-layout">
-            <!-- Video Section -->
-            <div class="video-section">
-                <div class="video-container">
-                    <video id="exerciseVideo" autoplay loop muted playsinline>
-    <source src="{% static 'Patients/videos/jj.mp4' %}" type="video/mp4">
-    Your browser does not support the video tag.
-</video>
+    <div class="studio-container">
+        <div class="studio-title-bar">
+            <div class="studio-title">
+                <h1><i class="fi fi-sr-running" style="color: var(--primary-teal);"></i> Modified Jumping Jacks AI Studio</h1>
+                <p>Dual-kinematic tracking: Overhead Arm Abduction (>140°) + Lateral Ankle Step-Out (>1.5× Hip Width)</p>
+            </div>
+        </div>
+
+        <div class="studio-grid">
+            <div class="video-studio-card">
+                <div class="video-viewport">
+                    <img src="{% url 'jj_video_feed' %}" alt="Modified Jumping Jacks AI Stream" class="video-feed">
+
+                    <div class="pip-demo" id="pipDemo">
+                        <video autoplay loop muted playsinline>
+                            <source src="{% static 'Patients/videos/jj.mp4' %}" type="video/mp4">
+                        </video>
+                        <div class="pip-label">Reference Form</div>
+                    </div>
+
+                    <div class="hud-top-bar">
+                        <div class="camera-pill">
+                            <span class="live-dot"></span>
+                            <span>AI POSE STUDIO • JUMPING JACKS</span>
+                        </div>
+
+                        <div class="hud-center-stack">
+                            <div class="stage-pill" id="stagePill">
+                                <span>●</span>
+                                <span id="stageDisplay">READY TO START</span>
+                            </div>
+                            <div class="warning-pill" id="warningPill">
+                                <span id="warningText">⚠ Step feet wider</span>
+                            </div>
+                        </div>
+
+                        <div class="timer-pill">
+                            <i class="fi fi-rr-clock"></i>
+                            <span id="sessionTimer">00:00</span>
+                        </div>
+                    </div>
+
+                    <div class="hud-bottom-bar">
+                        <div class="angle-badge">
+                            <div class="angle-badge-label">Arm Abduction (L / R)</div>
+                            <div class="angle-badge-value"><span id="leftAngleVal">0</span>° / <span id="rightAngleVal">0</span>°</div>
+                            <div class="angle-badge-sub">Target Overhead: > 140°</div>
+                        </div>
+
+                        <div class="angle-badge" style="text-align: right;">
+                            <div class="angle-badge-label">Ankle Step-Out Ratio</div>
+                            <div class="angle-badge-value"><span id="stanceRatioVal">1.00</span>×</div>
+                            <div class="angle-badge-sub">Target Spread: > 1.50× Hip Width</div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Control Panel -->
-            <div class="control-panel">
-                <h2>🎯 Your Session</h2>
-
-                <!-- Rep Counter -->
-                <div class="rep-counter">
-                    <div class="rep-counter-label">REPS COMPLETED</div>
-                    <div class="rep-count" id="repCount">0</div>
-                    <div class="rep-target">of <span id="targetReps">10</span> reps</div>
-                </div>
-
-                <!-- Set Reps -->
-                <div class="set-reps">
-                    <label>Set Your Target Reps</label>
-                    <div class="rep-input-group">
-                        <button class="rep-btn" id="decreaseBtn">−</button>
-                        <input type="number" class="rep-input" id="repInput" value="10" min="1" max="50">
-                        <button class="rep-btn" id="increaseBtn">+</button>
+            <div class="telemetry-panel">
+                <div class="ring-section">
+                    <div class="ring-wrapper">
+                        <svg class="progress-ring" viewBox="0 0 118 118">
+                            <defs>
+                                <linearGradient id="tealGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#00A8A8" />
+                                    <stop offset="100%" stop-color="#1E3A5F" />
+                                </linearGradient>
+                            </defs>
+                            <circle class="progress-ring-bg" cx="59" cy="59" r="48"></circle>
+                            <circle class="progress-ring-fill" id="repRingFill" cx="59" cy="59" r="48"></circle>
+                        </svg>
+                        <div class="ring-center-text">
+                            <div class="ring-reps" id="repsCount">0</div>
+                            <div class="ring-target">/ <span id="targetDisplay">12</span> REPS</div>
+                        </div>
                     </div>
-                    <div class="quick-sets">
-                        <button class="quick-set-btn" onclick="setReps(5)">5 reps</button>
-                        <button class="quick-set-btn" onclick="setReps(10)">10 reps</button>
-                        <button class="quick-set-btn" onclick="setReps(15)">15 reps</button>
-                        <button class="quick-set-btn" onclick="setReps(20)">20 reps</button>
-                        <button class="quick-set-btn" onclick="setReps(25)">25 reps</button>
-                        <button class="quick-set-btn" onclick="setReps(30)">30 reps</button>
+                    <div class="ring-info">
+                        <h3>Low-Impact Cardio</h3>
+                        <p>Reach arms overhead while stepping laterally past 1.5× hip width, then return to center.</p>
+                        <span class="completion-chip" id="completionChip">0% Complete</span>
                     </div>
                 </div>
 
-                <!-- Action Buttons -->
-                <div class="action-buttons">
-                    <button class="start-btn" id="startBtn">▶ Start Exercise</button>
-                    <button class="reset-btn" id="resetBtn">↺ Reset Counter</button>
+                <div class="stepper-section">
+                    <div class="section-label">
+                        <span>Target Repetitions</span>
+                        <span>Cardio Set</span>
+                    </div>
+                    <div class="stepper-controls">
+                        <button type="button" class="step-btn" id="stepMinusBtn">−</button>
+                        <input type="number" id="targetReps" class="step-input" value="12" min="1" max="50">
+                        <button type="button" class="step-btn" id="stepPlusBtn">+</button>
+                    </div>
+                    <div class="quick-chips">
+                        <button type="button" class="chip-btn" data-reps="8">8 Reps</button>
+                        <button type="button" class="chip-btn" data-reps="10">10 Reps</button>
+                        <button type="button" class="chip-btn active" data-reps="12">12 Reps</button>
+                        <button type="button" class="chip-btn" data-reps="15">15 Reps</button>
+                    </div>
+                </div>
+
+                <div class="form-breakdown">
+                    <div class="section-label">
+                        <span>Biomechanical Form Breakdown</span>
+                        <span id="liveQualityScore">100% Quality</span>
+                    </div>
+                    <div class="quality-row">
+                        <div class="quality-row-header">
+                            <span class="quality-tag"><span class="dot dot-excellent"></span> Excellent (★ Full Reach & Step)</span>
+                            <span id="excellentCount">0</span>
+                        </div>
+                        <div class="bar-track"><div class="bar-fill fill-excellent" id="excellentBar"></div></div>
+                    </div>
+                    <div class="quality-row">
+                        <div class="quality-row-header">
+                            <span class="quality-tag"><span class="dot dot-good"></span> Good (✓ > 135° Abduction)</span>
+                            <span id="goodCount">0</span>
+                        </div>
+                        <div class="bar-track"><div class="bar-fill fill-good" id="goodBar"></div></div>
+                    </div>
+                    <div class="quality-row">
+                        <div class="quality-row-header">
+                            <span class="quality-tag"><span class="dot dot-partial"></span> Partial (!)</span>
+                            <span id="partialCount">0</span>
+                        </div>
+                        <div class="bar-track"><div class="bar-fill fill-partial" id="partialBar"></div></div>
+                    </div>
+                </div>
+
+                <div class="meters-grid">
+                    <div class="meter-card">
+                        <div class="meter-header">
+                            <span>Arm Symmetry</span>
+                            <span class="meter-val" id="symmetryVal">100%</span>
+                        </div>
+                        <div class="bar-track">
+                            <div class="bar-fill meter-fill-teal" id="symmetryBar" style="width: 100%;"></div>
+                        </div>
+                    </div>
+                    <div class="meter-card">
+                        <div class="meter-header">
+                            <span>Lateral Step Spread</span>
+                            <span class="meter-val" id="stanceVal">1.00×</span>
+                        </div>
+                        <div class="bar-track">
+                            <div class="bar-fill meter-fill-teal" id="stanceBar" style="width: 50%;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="studio-actions">
+                    <button id="startBtn" class="btn-studio-start">
+                        <i class="fi fi-sr-play"></i> Start Workout
+                    </button>
+                    <button id="resetBtn" class="btn-studio-reset" style="display: none;">
+                        <i class="fi fi-rr-refresh"></i> Reset
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 
+    <div id="summaryModal" class="modal">
+        <div class="modal-card">
+            <div class="modal-badge"><i class="fi fi-sr-trophy"></i></div>
+            <h2>Jumping Jacks Complete!</h2>
+            <p>Cardio & mobility session saved to your clinical record</p>
+
+            <div class="summary-kpi-grid">
+                <div class="kpi-box">
+                    <div class="kpi-val" id="summaryTotal">0</div>
+                    <div class="kpi-lbl">Total Reps</div>
+                </div>
+                <div class="kpi-box">
+                    <div class="kpi-val" id="summaryDuration">00:00</div>
+                    <div class="kpi-lbl">Duration</div>
+                </div>
+                <div class="kpi-box">
+                    <div class="kpi-val" id="summaryQuality">0/100</div>
+                    <div class="kpi-lbl">Quality Score</div>
+                </div>
+            </div>
+
+            <div class="summary-breakdown-list">
+                <div class="summary-line"><span>★ Excellent Reps</span><strong id="summaryExcellent">0</strong></div>
+                <div class="summary-line"><span>✓ Good Reps</span><strong id="summaryGood">0</strong></div>
+                <div class="summary-line"><span>! Partial Reps</span><strong id="summaryPartial">0</strong></div>
+            </div>
+
+            <div id="saveStatus" class="save-banner saving" style="display: none;">
+                Syncing session telemetry to clinical database...
+            </div>
+
+            <div class="modal-btn-row">
+                <button type="button" onclick="window.location.href='{% url 'sr' %}'" class="btn-studio-start">
+                    View Rehab Progress →
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script>
-        // Get elements
-        const video = document.getElementById('exerciseVideo');
-        const repCountDisplay = document.getElementById('repCount');
-        const targetRepsDisplay = document.getElementById('targetReps');
-        const repInput = document.getElementById('repInput');
-        const decreaseBtn = document.getElementById('decreaseBtn');
-        const increaseBtn = document.getElementById('increaseBtn');
-        const startBtn = document.getElementById('startBtn');
-        const resetBtn = document.getElementById('resetBtn');
+        const CIRCUMFERENCE = 2 * Math.PI * 48;
+        let checkInterval = null;
+        let timerInterval = null;
+        let workoutActive = false;
+        let workoutStartTime = null;
 
-        let currentReps = 0;
-        let targetReps = 10;
-        let isExercising = false;
+        const targetInput = document.getElementById('targetReps');
+        const targetDisplay = document.getElementById('targetDisplay');
+        const repRingFill = document.getElementById('repRingFill');
 
-        // Rep input controls
-        decreaseBtn.addEventListener('click', () => {
-            if (repInput.value > 1) {
-                repInput.value = parseInt(repInput.value) - 1;
-                updateTargetReps();
+        document.getElementById('togglePipBtn').addEventListener('click', () => {
+            document.getElementById('pipDemo').classList.toggle('hidden');
+        });
+
+        function setTargetValue(val) {
+            const clamped = Math.max(1, Math.min(50, parseInt(val) || 12));
+            targetInput.value = clamped;
+            targetDisplay.textContent = clamped;
+            document.querySelectorAll('.chip-btn').forEach(btn => {
+                btn.classList.toggle('active', parseInt(btn.dataset.reps) === clamped);
+            });
+            updateRing(parseInt(document.getElementById('repsCount').textContent) || 0, clamped);
+        }
+
+        document.getElementById('stepMinusBtn').addEventListener('click', () => setTargetValue(parseInt(targetInput.value) - 1));
+        document.getElementById('stepPlusBtn').addEventListener('click', () => setTargetValue(parseInt(targetInput.value) + 1));
+        targetInput.addEventListener('change', () => setTargetValue(targetInput.value));
+        document.querySelectorAll('.chip-btn').forEach(btn => {
+            btn.addEventListener('click', () => setTargetValue(btn.dataset.reps));
+        });
+
+        function updateRing(current, target) {
+            const pct = target > 0 ? Math.min(1, current / target) : 0;
+            repRingFill.style.strokeDashoffset = CIRCUMFERENCE * (1 - pct);
+            document.getElementById('completionChip').textContent = `${Math.round(pct * 100)}% Complete`;
+        }
+
+        function formatDuration(sec) {
+            const m = String(Math.floor(sec / 60)).padStart(2, '0');
+            const s = String(sec % 60).padStart(2, '0');
+            return `${m}:${s}`;
+        }
+
+        document.getElementById('startBtn').addEventListener('click', async function() {
+            const targetReps = parseInt(targetInput.value) || 12;
+            const res = await fetch('{% url "start_jj_workout" %}', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ target_reps: targetReps })
+            });
+            const data = await res.json();
+            if (data.status === 'started') {
+                workoutActive = true;
+                workoutStartTime = Date.now();
+                document.getElementById('startBtn').disabled = true;
+                document.getElementById('startBtn').innerHTML = '<span class="live-dot"></span> Tracking Active...';
+                targetInput.disabled = true;
+                document.getElementById('resetBtn').style.display = 'inline-flex';
+                targetDisplay.textContent = targetReps;
+                updateRing(0, targetReps);
+
+                clearInterval(checkInterval);
+                checkInterval = setInterval(checkWorkoutStatus, 300);
+                timerInterval = setInterval(() => {
+                    if (workoutStartTime) {
+                        document.getElementById('sessionTimer').textContent =
+                            formatDuration(Math.floor((Date.now() - workoutStartTime) / 1000));
+                    }
+                }, 1000);
             }
         });
 
-        increaseBtn.addEventListener('click', () => {
-            if (repInput.value < 50) {
-                repInput.value = parseInt(repInput.value) + 1;
-                updateTargetReps();
-            }
+        document.getElementById('resetBtn').addEventListener('click', async function() {
+            await fetch('{% url "reset_jj_workout" %}', { method: 'POST' });
+            workoutActive = false;
+            workoutStartTime = null;
+            clearInterval(timerInterval);
+            document.getElementById('startBtn').disabled = false;
+            document.getElementById('startBtn').innerHTML = '<i class="fi fi-sr-play"></i> Start Workout';
+            targetInput.disabled = false;
+            document.getElementById('resetBtn').style.display = 'none';
+            document.getElementById('sessionTimer').textContent = '00:00';
+            document.getElementById('repsCount').textContent = '0';
+            updateRing(0, parseInt(targetInput.value) || 12);
         });
 
-        repInput.addEventListener('change', () => {
-            if (repInput.value < 1) repInput.value = 1;
-            if (repInput.value > 50) repInput.value = 50;
-            updateTargetReps();
-        });
+        async function checkWorkoutStatus() {
+            try {
+                const response = await fetch('{% url "get_jj_status" %}');
+                const data = await response.json();
 
-        function setReps(num) {
-            repInput.value = num;
-            updateTargetReps();
-        }
+                const total = data.counter || 0;
+                const target = data.target_reps || parseInt(targetInput.value) || 12;
+                const exc = data.excellent_reps || 0;
+                const goodOnly = Math.max(0, (data.good_reps || 0) - exc);
+                const part = data.partial_reps || 0;
 
-        function updateTargetReps() {
-            targetReps = parseInt(repInput.value);
-            targetRepsDisplay.textContent = targetReps;
-        }
+                document.getElementById('repsCount').textContent = total;
+                document.getElementById('excellentCount').textContent = exc;
+                document.getElementById('goodCount').textContent = goodOnly;
+                document.getElementById('partialCount').textContent = part;
+                updateRing(total, target);
 
-        // Start button
-        startBtn.addEventListener('click', () => {
-            if (!isExercising) {
-                isExercising = true;
-                startBtn.textContent = '✓ Rep Complete';
-                startBtn.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
-            } else {
-                incrementRep();
-            }
-        });
+                const denom = Math.max(1, total);
+                document.getElementById('excellentBar').style.width = `${(exc / denom) * 100}%`;
+                document.getElementById('goodBar').style.width = `${(goodOnly / denom) * 100}%`;
+                document.getElementById('partialBar').style.width = `${(part / denom) * 100}%`;
 
-        function incrementRep() {
-            if (currentReps < targetReps) {
-                currentReps++;
-                repCountDisplay.textContent = currentReps;
-                
-                // Check if completed
-                if (currentReps >= targetReps) {
-                    completeExercise();
-                }
-            }
-        }
+                const qScore = total > 0 ? Math.round((exc * 100 + goodOnly * 75 + part * 40) / total) : 100;
+                document.getElementById('liveQualityScore').textContent = `${qScore}% Quality`;
 
-        function completeExercise() {
-            startBtn.textContent = '🎉 Complete!';
-            startBtn.style.background = 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)';
-            
-            // Celebration effect
-            setTimeout(() => {
-                alert('Great job! You completed all reps! 💪');
-            }, 500);
-        }
+                document.getElementById('leftAngleVal').textContent = data.left_angle ?? 0;
+                document.getElementById('rightAngleVal').textContent = data.right_angle ?? 0;
+                document.getElementById('stanceRatioVal').textContent = (data.stance_ratio ?? 1.0).toFixed(2);
+                document.getElementById('symmetryVal').textContent = `${data.symmetry_score ?? 100}%`;
+                document.getElementById('symmetryBar').style.width = `${data.symmetry_score ?? 100}%`;
+                document.getElementById('stanceVal').textContent = `${(data.stance_ratio ?? 1.0).toFixed(2)}×`;
+                document.getElementById('stanceBar').style.width = `${data.stance_score ?? 50}%`;
 
-        // Reset button
-        resetBtn.addEventListener('click', () => {
-            currentReps = 0;
-            repCountDisplay.textContent = '0';
-            isExercising = false;
-            startBtn.textContent = '▶ Start Exercise';
-            startBtn.style.background = 'linear-gradient(135deg, #4CAF50 0%, #45a049 100%)';
-        });
-
-        // Keyboard shortcuts
-        document.addEventListener('keydown', (e) => {
-            if (e.code === 'Space') {
-                e.preventDefault();
-                if (isExercising) {
-                    incrementRep();
+                const stagePill = document.getElementById('stagePill');
+                const stageDisplay = document.getElementById('stageDisplay');
+                if (data.stage === 'up') {
+                    stageDisplay.textContent = 'STEP-OUT & REACH (UP)';
+                    stagePill.className = 'stage-pill stage-up';
+                } else if (data.stage === 'down') {
+                    stageDisplay.textContent = 'RETURN CENTER (DOWN)';
+                    stagePill.className = 'stage-pill stage-down';
                 } else {
-                    startBtn.click();
+                    stageDisplay.textContent = workoutActive ? 'STEP OUT & REACH UP' : 'READY TO START';
+                    stagePill.className = 'stage-pill';
                 }
+
+                const warningPill = document.getElementById('warningPill');
+                if (data.form_warning) {
+                    document.getElementById('warningText').textContent = data.form_warning;
+                    warningPill.classList.add('active');
+                } else {
+                    warningPill.classList.remove('active');
+                }
+
+                if (data.complete && workoutActive) {
+                    workoutActive = false;
+                    clearInterval(checkInterval);
+                    clearInterval(timerInterval);
+                    showSummary(data);
+                }
+            } catch (e) { console.error(e); }
+        }
+
+        async function showSummary(data) {
+            const modal = document.getElementById('summaryModal');
+            const total = data.counter || 0;
+            const exc = data.excellent_reps || 0;
+            const goodOnly = Math.max(0, (data.good_reps || 0) - exc);
+            const part = data.partial_reps || 0;
+            const durationSeconds = workoutStartTime ? Math.floor((Date.now() - workoutStartTime) / 1000) : 0;
+            const qScore = total > 0 ? Math.round((exc * 100 + goodOnly * 75 + part * 40) / total) : 0;
+
+            document.getElementById('summaryTotal').textContent = `${total}/${data.target_reps}`;
+            document.getElementById('summaryDuration').textContent = formatDuration(durationSeconds);
+            document.getElementById('summaryQuality').textContent = `${qScore}/100`;
+            document.getElementById('summaryExcellent').textContent = exc;
+            document.getElementById('summaryGood').textContent = goodOnly;
+            document.getElementById('summaryPartial').textContent = part;
+
+            modal.classList.add('active');
+            const saveStatusEl = document.getElementById('saveStatus');
+            saveStatusEl.style.display = 'block';
+            try {
+                const res = await fetch('{% url "save_workout" %}', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        exercise_type: 'Modified Jumping Jacks',
+                        total_reps: total,
+                        target_reps: data.target_reps,
+                        excellent_reps: exc,
+                        good_reps: data.good_reps,
+                        partial_reps: part,
+                        duration_seconds: durationSeconds,
+                        completed: true
+                    })
+                });
+                const result = await res.json();
+                saveStatusEl.className = 'save-banner success';
+                saveStatusEl.textContent = '✓ ' + (result.message || 'Saved to clinical record!');
+            } catch (e) {
+                saveStatusEl.className = 'save-banner error';
+                saveStatusEl.textContent = '⚠ Sync error: ' + e.message;
             }
-        });
+        }
+
+        checkInterval = setInterval(checkWorkoutStatus, 600);
     </script>
 </body>
 </html>

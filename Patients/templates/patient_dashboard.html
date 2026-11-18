@@ -505,6 +505,21 @@
             line-height: 1.5;
         }
 
+        /* Loading Spinner */
+        .spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
         /* Animations */
         @keyframes fadeInUp {
             from {
@@ -570,6 +585,141 @@
             .welcome-section {
                 padding: 1.5rem;
             }
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 2.5rem;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+            animation: slideDown 0.4s ease;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--bg-light);
+        }
+
+        .modal-header h2 {
+            color: var(--primary-teal);
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .close {
+            color: var(--text-gray);
+            font-size: 2rem;
+            font-weight: 300;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .close:hover {
+            background: var(--bg-light);
+            color: var(--primary-teal);
+        }
+
+        .modal-body {
+            margin-bottom: 1.5rem;
+        }
+
+        .summary-content {
+            background: var(--bg-light);
+            padding: 1.5rem;
+            border-radius: 12px;
+            white-space: pre-wrap;
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.7;
+            color: var(--text-dark);
+            border-left: 4px solid var(--primary-teal);
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #00A8A8 0%, #4DB6AC 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 168, 168, 0.3);
+        }
+
+        .loading-text {
+            text-align: center;
+            color: var(--text-gray);
+            font-size: 1.1rem;
+            padding: 2rem;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid var(--bg-light);
+            border-top-color: var(--primary-teal);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
         }
     </style>
 </head>
@@ -665,8 +815,8 @@
                     </div>
                 </a>
 
-                <!-- Summary Card -->
-                <a href="#" class="action-card">
+                <!-- Recovery Insights Card - Now calls generate_and_send_summary -->
+                <div class="action-card" id="recovery-insights-card" onclick="generateRecoveryInsights()">
                     <div class="action-icon-wrapper pink">
                         <i class="fi fi-sr-document"></i>
                     </div>
@@ -684,10 +834,11 @@
                             </div>
                         </div>
                     </div>
-                    <div class="action-arrow">
+                    <div class="action-arrow" id="insights-arrow">
                         <i class="fi fi-rr-arrow-right"></i>
                     </div>
-                </a>
+                    <div class="spinner" id="insights-spinner"></div>
+                </div>
             </div>
 
             <!-- Right Column - Stats & Tips -->
@@ -742,5 +893,121 @@
             </div>
         </div>
     </div>
+
+    <!-- Recovery Insights Modal -->
+    <div id="insightsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fi fi-sr-document"></i> Recovery Insights</h2>
+                <span class="close" onclick="closeInsightsModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div id="loading-state" style="display: none;">
+                    <div class="loading-spinner"></div>
+                    <p class="loading-text">Analyzing your recovery data...</p>
+                </div>
+                <div id="summary-container" style="display: none;">
+                    <pre class="summary-content" id="summary-text"></pre>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" onclick="closeInsightsModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Get CSRF token from cookie
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        const csrftoken = getCookie('csrftoken');
+
+        // Generate Recovery Insights
+        async function generateRecoveryInsights() {
+            const modal = document.getElementById('insightsModal');
+            const loadingState = document.getElementById('loading-state');
+            const summaryContainer = document.getElementById('summary-container');
+            const summaryText = document.getElementById('summary-text');
+            const card = document.getElementById('recovery-insights-card');
+            const arrow = document.getElementById('insights-arrow');
+
+            // Show modal with loading state
+            modal.style.display = 'block';
+            loadingState.style.display = 'block';
+            summaryContainer.style.display = 'none';
+
+            // Disable card during loading
+            card.style.opacity = '0.7';
+            card.style.pointerEvents = 'none';
+
+            try {
+                const response = await fetch('{% url "generate_and_send_summary" %}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrftoken
+                    }
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // Show summary
+                    summaryText.textContent = data.summary;
+                    loadingState.style.display = 'none';
+                    summaryContainer.style.display = 'block';
+                } else {
+                    // Show error
+                    summaryText.textContent = 'Error: ' + (data.error || 'Failed to generate summary');
+                    loadingState.style.display = 'none';
+                    summaryContainer.style.display = 'block';
+                }
+            } catch (error) {
+                // Show error
+                summaryText.textContent = 'Error: Unable to connect to server. Please try again.';
+                loadingState.style.display = 'none';
+                summaryContainer.style.display = 'block';
+                console.error('Error:', error);
+            } finally {
+                // Re-enable card
+                card.style.opacity = '1';
+                card.style.pointerEvents = 'auto';
+            }
+        }
+
+        // Close modal
+        function closeInsightsModal() {
+            const modal = document.getElementById('insightsModal');
+            modal.style.display = 'none';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('insightsModal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeInsightsModal();
+            }
+        });
+    </script>
 </body>
 </html>

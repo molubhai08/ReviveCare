@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Doctor Portal - ReViveCare</title>
+    <title>Doctor Clinical Dashboard - ReViveCare</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.1.0/uicons-regular-rounded/css/uicons-regular-rounded.css">
+    <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.1.0/uicons-solid-rounded/css/uicons-solid-rounded.css">
     <style>
         * {
             margin: 0;
@@ -17,14 +19,16 @@
             --primary-teal-dark: #008B8B;
             --primary-teal-light: #B2E5E5;
             --accent-navy: #1E3A5F;
-            --accent-blue: #4A90A4;
             --text-dark: #2C3E50;
             --text-gray: #6B7B8C;
             --bg-light: #F8FBFC;
             --white: #ffffff;
-            --gradient-teal: linear-gradient(135deg, #00A8A8 0%, #4DB6AC 50%, #80CBC4 100%);
-            --shadow-soft: 0 4px 20px rgba(0, 168, 168, 0.15);
-            --shadow-card: 0 8px 30px rgba(0, 0, 0, 0.08);
+            --danger-red: #E53E3E;
+            --warning-amber: #DD6B20;
+            --success-green: #2F855A;
+            --gradient-teal: linear-gradient(135deg, #00A8A8 0%, #008B8B 100%);
+            --gradient-navy: linear-gradient(135deg, #1E3A5F 0%, #2C3E50 100%);
+            --shadow-card: 0 8px 30px rgba(30, 58, 95, 0.08);
         }
 
         body {
@@ -36,13 +40,14 @@
 
         /* Header */
         header {
-            background: var(--gradient-teal);
+            background: var(--gradient-navy);
             color: white;
             padding: 1rem 0;
-            box-shadow: 0 4px 20px rgba(0, 168, 168, 0.3);
+            box-shadow: 0 4px 20px rgba(30, 58, 95, 0.25);
             position: sticky;
             top: 0;
             z-index: 1000;
+            border-bottom: 3px solid var(--primary-teal);
         }
 
         nav {
@@ -52,536 +57,1057 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: 1rem;
         }
 
         .logo {
             display: flex;
             align-items: center;
-            gap: 0.8rem;
-        }
-
-        .logo-icon {
-            width: 45px;
-            height: 45px;
-            background: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--primary-teal);
-            font-size: 1.4rem;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .logo-text {
-            font-size: 1.5rem;
-            font-weight: 700;
+            gap: 0.85rem;
+            text-decoration: none;
             color: white;
         }
 
-        .user-info {
+        .logo-icon {
+            width: 46px;
+            height: 46px;
+            background: var(--gradient-teal);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.4rem;
+            box-shadow: 0 4px 15px rgba(0, 168, 168, 0.4);
+        }
+
+        .logo-text {
+            font-size: 1.45rem;
+            font-weight: 700;
+        }
+
+        .logo-sub {
+            font-size: 0.72rem;
+            color: var(--primary-teal-light);
+            display: block;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .nav-right {
             display: flex;
             align-items: center;
             gap: 1rem;
         }
 
-        .user-info span {
-            font-weight: 500;
-            opacity: 0.95;
+        .doctor-pill {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.45rem 1rem 0.45rem 0.5rem;
+            border-radius: 50px;
+            border: 1px solid rgba(178, 229, 229, 0.25);
         }
 
-        .user-avatar {
-            width: 45px;
-            height: 45px;
-            background: white;
+        .doctor-avatar {
+            width: 38px;
+            height: 38px;
             border-radius: 50%;
+            background: var(--primary-teal);
+            color: white;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--primary-teal);
-            font-size: 1rem;
             font-weight: 700;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            font-size: 0.9rem;
         }
 
-        .logout-btn {
-            background: rgba(255,255,255,0.2);
-            border: 2px solid rgba(255,255,255,0.5);
+        .doctor-meta {
+            line-height: 1.25;
+        }
+
+        .doctor-meta strong {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .doctor-meta span {
+            font-size: 0.75rem;
+            color: var(--primary-teal-light);
+        }
+
+        .btn-header {
+            background: var(--gradient-teal);
             color: white;
-            padding: 0.6rem 1.5rem;
+            text-decoration: none;
+            padding: 0.6rem 1.25rem;
             border-radius: 50px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            transition: all 0.25s ease;
+            border: none;
             cursor: pointer;
-            font-size: 0.95rem;
-            transition: all 0.3s ease;
-            font-weight: 500;
-            backdrop-filter: blur(10px);
         }
 
-        .logout-btn:hover {
-            background: white;
-            color: var(--primary-teal);
-            border-color: white;
+        .btn-header:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(0, 168, 168, 0.4);
+        }
+
+        .btn-logout {
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            text-decoration: none;
+            padding: 0.55rem 1.15rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: all 0.25s ease;
+        }
+
+        .btn-logout:hover {
+            background: #E53E3E;
+            border-color: #E53E3E;
         }
 
         /* Main Container */
         .container {
             max-width: 1400px;
             margin: 0 auto;
-            padding: 3rem 2rem;
+            padding: 2.2rem 2rem 4rem;
         }
 
-        .welcome-section {
-            margin-bottom: 3rem;
-            animation: fadeInUp 0.6s ease;
-        }
-
-        .welcome-section h1 {
-            font-size: 2.5rem;
-            color: var(--text-dark);
-            margin-bottom: 0.5rem;
-            font-weight: 700;
-        }
-
-        .welcome-section p {
-            font-size: 1.1rem;
-            color: var(--text-gray);
-        }
-
-        /* Stats Cards */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 3rem;
-            animation: fadeInUp 0.6s ease 0.2s both;
-        }
-
-        .stat-card {
-            background: var(--white);
-            padding: 1.8rem;
-            border-radius: 16px;
-            box-shadow: var(--shadow-card);
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-            transition: all 0.3s ease;
-            border: 1px solid rgba(0, 168, 168, 0.1);
-        }
-
-        .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12);
-            border-color: var(--primary-teal-light);
-        }
-
-        .stat-icon {
-            width: 65px;
-            height: 65px;
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.8rem;
-            flex-shrink: 0;
-        }
-
-        .stat-icon.patients {
-            background: linear-gradient(135deg, #00A8A8 0%, #4DB6AC 100%);
-            box-shadow: 0 8px 20px rgba(0, 168, 168, 0.3);
-        }
-
-        .stat-icon.alerts {
-            background: linear-gradient(135deg, #E74C3C 0%, #C0392B 100%);
-            box-shadow: 0 8px 20px rgba(231, 76, 60, 0.3);
-        }
-
-        .stat-icon.progress {
-            background: linear-gradient(135deg, #1E3A5F 0%, #2C5282 100%);
-            box-shadow: 0 8px 20px rgba(30, 58, 95, 0.3);
-        }
-
-        .stat-icon.reviews {
-            background: linear-gradient(135deg, #38B2AC 0%, #319795 100%);
-            box-shadow: 0 8px 20px rgba(56, 178, 172, 0.3);
-        }
-
-        .stat-info h3 {
-            font-size: 2.2rem;
-            color: var(--text-dark);
-            margin-bottom: 0.3rem;
-            font-weight: 700;
-        }
-
-        .stat-info p {
-            color: var(--text-gray);
-            font-size: 0.95rem;
-            font-weight: 500;
-        }
-
-        /* Main Actions */
-        .main-actions {
-            animation: fadeInUp 0.6s ease 0.4s both;
-        }
-
-        .section-title {
-            font-size: 1.6rem;
-            color: var(--text-dark);
+        /* Flash Messages */
+        .flash-messages {
             margin-bottom: 1.5rem;
+        }
+
+        .flash-item {
+            padding: 0.95rem 1.25rem;
+            border-radius: 14px;
+            margin-bottom: 0.6rem;
+            font-size: 0.92rem;
+            font-weight: 500;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            font-weight: 600;
+            gap: 0.7rem;
+            background: #E6FFFA;
+            border: 1.5px solid var(--primary-teal);
+            color: var(--accent-navy);
         }
 
-        .actions-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+        /* Hero Banner */
+        .doctor-hero {
+            background: linear-gradient(135deg, #1E3A5F 0%, #008B8B 100%);
+            border-radius: 22px;
+            padding: 2.2rem 2.5rem;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             gap: 2rem;
-            margin-bottom: 3rem;
-        }
-
-        .action-card {
-            background: var(--white);
-            border-radius: 20px;
-            padding: 3rem;
-            box-shadow: var(--shadow-card);
-            text-align: center;
-            transition: all 0.4s ease;
-            cursor: pointer;
-            border: 2px solid transparent;
+            margin-bottom: 2rem;
+            box-shadow: 0 12px 35px rgba(30, 58, 95, 0.18);
             position: relative;
             overflow: hidden;
         }
 
-        .action-card::before {
+        .doctor-hero::after {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: var(--gradient-teal);
-            transform: scaleX(0);
-            transition: transform 0.3s ease;
-        }
-
-        .action-card:hover::before {
-            transform: scaleX(1);
-        }
-
-        .action-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 15px 45px rgba(0, 0, 0, 0.12);
-            border-color: var(--primary-teal-light);
-        }
-
-        .action-icon {
-            width: 100px;
-            height: 100px;
-            margin: 0 auto 2rem;
+            right: -60px;
+            top: -60px;
+            width: 240px;
+            height: 240px;
             border-radius: 50%;
+            background: radial-gradient(circle, rgba(178, 229, 229, 0.22), transparent 70%);
+        }
+
+        .hero-left h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.35rem;
+        }
+
+        .hero-left p {
+            color: var(--primary-teal-light);
+            font-size: 0.98rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.2rem;
+            align-items: center;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 1rem;
+            z-index: 1;
+            flex-wrap: wrap;
+        }
+
+        .btn-hero-primary {
+            background: var(--white);
+            color: var(--accent-navy);
+            padding: 0.9rem 1.6rem;
+            border-radius: 14px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.95rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.55rem;
+            box-shadow: 0 8px 22px rgba(0, 0, 0, 0.15);
+            transition: all 0.25s ease;
+        }
+
+        .btn-hero-primary:hover {
+            transform: translateY(-2px);
+            background: var(--primary-teal-light);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.4rem;
+            margin-bottom: 2.2rem;
+        }
+
+        .stat-card {
+            background: var(--white);
+            border-radius: 18px;
+            padding: 1.5rem 1.6rem;
+            box-shadow: var(--shadow-card);
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+            border: 1px solid rgba(0, 168, 168, 0.12);
+            transition: transform 0.25s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .stat-icon {
+            width: 58px;
+            height: 58px;
+            border-radius: 15px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 3rem;
+            font-size: 1.5rem;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .stat-icon.teal {
             background: var(--gradient-teal);
-            box-shadow: 0 10px 30px rgba(0, 168, 168, 0.35);
         }
 
-        .action-card:nth-child(2) .action-icon {
-            background: linear-gradient(135deg, var(--accent-navy) 0%, #2C5282 100%);
-            box-shadow: 0 10px 30px rgba(30, 58, 95, 0.35);
+        .stat-icon.red {
+            background: linear-gradient(135deg, #E53E3E 0%, #C53030 100%);
         }
 
-        .action-card h2 {
-            font-size: 1.6rem;
+        .stat-icon.navy {
+            background: var(--gradient-navy);
+        }
+
+        .stat-icon.green {
+            background: linear-gradient(135deg, #008B8B 0%, #38B2AC 100%);
+        }
+
+        .stat-info h3 {
+            font-size: 1.9rem;
+            font-weight: 700;
             color: var(--text-dark);
-            margin-bottom: 1rem;
-            font-weight: 600;
+            line-height: 1.1;
+            margin-bottom: 0.2rem;
         }
 
-        .action-card p {
+        .stat-info p {
+            font-size: 0.85rem;
             color: var(--text-gray);
-            font-size: 1rem;
-            margin-bottom: 2rem;
-            line-height: 1.7;
+            font-weight: 500;
         }
 
-        .action-btn {
-            background: var(--gradient-teal);
+        /* Section Headers */
+        .section-block {
+            margin-bottom: 2.5rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .section-title {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--accent-navy);
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .section-title i {
+            color: var(--primary-teal);
+        }
+
+        /* Emergency Alerts Feed */
+        .alerts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .alert-card {
+            background: #FFF5F5;
+            border: 2px solid #FEB2B2;
+            border-left: 6px solid #E53E3E;
+            border-radius: 16px;
+            padding: 1.4rem 1.5rem;
+            box-shadow: 0 6px 20px rgba(229, 62, 62, 0.08);
+            display: flex;
+            flex-direction: column;
+            gap: 0.85rem;
+        }
+
+        .alert-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .alert-patient {
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+        }
+
+        .alert-patient-badge {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: #E53E3E;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .alert-patient h4 {
+            font-size: 1.05rem;
+            color: #742A2A;
+            font-weight: 700;
+        }
+
+        .alert-patient span {
+            font-size: 0.78rem;
+            color: #9B2C2C;
+        }
+
+        .score-pill {
+            background: #E53E3E;
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 50px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .alert-box {
+            background: white;
+            border-radius: 10px;
+            padding: 0.85rem 1rem;
+            border: 1px solid #FED7D7;
+            font-size: 0.88rem;
+        }
+
+        .alert-box strong {
+            display: block;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #9B2C2C;
+            margin-bottom: 0.25rem;
+        }
+
+        .alert-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0.8rem;
+            margin-top: 0.2rem;
+        }
+
+        .btn-review {
+            background: var(--accent-navy);
             color: white;
             border: none;
-            padding: 1rem 2.5rem;
-            font-size: 1rem;
-            border-radius: 50px;
-            cursor: pointer;
+            padding: 0.55rem 1.15rem;
+            border-radius: 10px;
+            font-size: 0.84rem;
             font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: 0 6px 20px rgba(0, 168, 168, 0.35);
+            cursor: pointer;
             font-family: 'Poppins', sans-serif;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            transition: all 0.2s ease;
         }
 
-        .action-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 8px 25px rgba(0, 168, 168, 0.45);
+        .btn-review:hover {
+            background: var(--primary-teal-dark);
         }
 
-        .action-card:nth-child(2) .action-btn {
-            background: linear-gradient(135deg, var(--accent-navy) 0%, #2C5282 100%);
-            box-shadow: 0 6px 20px rgba(30, 58, 95, 0.35);
+        .empty-alert-banner {
+            background: white;
+            border-radius: 16px;
+            padding: 1.4rem 1.8rem;
+            border: 1.5px solid #C6F6D5;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: #22543D;
+            box-shadow: var(--shadow-card);
         }
 
-        .action-card:nth-child(2) .action-btn:hover {
-            box-shadow: 0 8px 25px rgba(30, 58, 95, 0.45);
+        .empty-alert-banner i {
+            font-size: 1.6rem;
+            color: #38A169;
         }
 
-        /* Quick Access Section */
-        .quick-access {
+        /* Assigned Patients Table Card */
+        .table-card {
             background: var(--white);
             border-radius: 20px;
-            padding: 2rem;
             box-shadow: var(--shadow-card);
-            animation: fadeInUp 0.6s ease 0.6s both;
-            border: 1px solid rgba(0, 168, 168, 0.1);
+            border: 1px solid rgba(0, 168, 168, 0.12);
+            overflow: hidden;
         }
 
-        .quick-links {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 1rem;
+        .patients-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .patients-table th {
+            background: #F1F7F9;
+            color: var(--accent-navy);
+            font-size: 0.82rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 1.1rem 1.3rem;
+            text-align: left;
+            border-bottom: 2px solid #E2EDF0;
+        }
+
+        .patients-table td {
+            padding: 1.15rem 1.3rem;
+            border-bottom: 1px solid #EDF2F7;
+            vertical-align: middle;
+            font-size: 0.92rem;
+        }
+
+        .patients-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .patients-table tr:hover td {
+            background: #F8FCFD;
+        }
+
+        .patient-cell {
+            display: flex;
+            align-items: center;
+            gap: 0.9rem;
+        }
+
+        .patient-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #00A8A8 0%, #1E3A5F 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+
+        .patient-name {
+            font-weight: 700;
+            color: var(--text-dark);
+            display: block;
+            text-decoration: none;
+        }
+
+        .patient-email {
+            font-size: 0.8rem;
+            color: var(--text-gray);
+        }
+
+        .streak-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            background: #FFFBEB;
+            color: #B45309;
+            border: 1px solid #FDE68A;
+            padding: 0.3rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.82rem;
+            font-weight: 600;
+        }
+
+        .compliance-wrap {
+            min-width: 140px;
+        }
+
+        .compliance-top {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.82rem;
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+        }
+
+        .compliance-bar {
+            height: 8px;
+            background: #E2EDF0;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .compliance-fill {
+            height: 100%;
+            background: var(--gradient-teal);
+            border-radius: 20px;
+        }
+
+        .quality-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.3rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            background: #E6FFFA;
+            color: var(--primary-teal-dark);
+        }
+
+        .action-links {
+            display: flex;
+            align-items: center;
+            gap: 0.55rem;
+        }
+
+        .btn-telemetry {
+            background: var(--gradient-teal);
+            color: white;
+            text-decoration: none;
+            padding: 0.55rem 1.05rem;
+            border-radius: 10px;
+            font-size: 0.83rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: all 0.2s ease;
+        }
+
+        .btn-telemetry:hover {
+            background: var(--accent-navy);
+            transform: translateY(-1px);
+        }
+
+        .btn-edit-pdf {
+            background: #EEF5F7;
+            color: var(--accent-navy);
+            text-decoration: none;
+            padding: 0.55rem 0.85rem;
+            border-radius: 10px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            transition: all 0.2s ease;
+        }
+
+        .btn-edit-pdf:hover {
+            background: var(--primary-teal-light);
+        }
+
+        .empty-patients {
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        .empty-patients i {
+            font-size: 2.8rem;
+            color: var(--primary-teal);
+            display: block;
+            margin-bottom: 0.8rem;
+        }
+
+        .empty-patients h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.4rem;
+            color: var(--accent-navy);
+        }
+
+        .empty-patients p {
+            color: var(--text-gray);
+            font-size: 0.92rem;
+            margin-bottom: 1.3rem;
+        }
+
+        /* Unassigned Legacy Patients Card */
+        .legacy-card {
+            background: #F0F9FF;
+            border: 1.5px dashed var(--primary-teal);
+            border-radius: 18px;
+            padding: 1.4rem 1.6rem;
             margin-top: 1.5rem;
         }
 
-        .quick-link {
-            padding: 1.2rem;
-            border: 2px solid #E8F0F0;
-            border-radius: 14px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            color: var(--text-dark);
-            background: var(--bg-light);
+        .legacy-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.9rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
         }
 
-        .quick-link:hover {
-            border-color: var(--primary-teal);
+        .legacy-header h4 {
+            color: var(--accent-navy);
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .legacy-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.85rem;
+        }
+
+        .legacy-item {
             background: white;
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0, 168, 168, 0.15);
+            border: 1px solid #B2E5E5;
+            border-radius: 12px;
+            padding: 0.7rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.9rem;
         }
 
-        .quick-link-icon {
-            font-size: 2rem;
-            margin-bottom: 0.6rem;
-        }
-
-        .quick-link-text {
-            font-size: 0.9rem;
+        .btn-claim {
+            background: var(--accent-navy);
+            color: white;
+            border: none;
+            padding: 0.4rem 0.85rem;
+            border-radius: 8px;
+            font-size: 0.78rem;
             font-weight: 600;
-            color: var(--text-dark);
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
         }
 
-        /* Animations */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
+        .btn-claim:hover {
+            background: var(--primary-teal);
+        }
+
+        @media (max-width: 1024px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
             }
-            to {
-                opacity: 1;
-                transform: translateY(0);
+            .table-card {
+                overflow-x: auto;
+            }
+            .patients-table {
+                min-width: 820px;
             }
         }
 
-        /* Responsive */
-        @media (max-width: 968px) {
-            .actions-grid {
+        @media (max-width: 720px) {
+            .doctor-hero {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .stats-grid, .alerts-grid {
                 grid-template-columns: 1fr;
             }
-
-            .stats-grid {
-                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            }
-
-            .welcome-section h1 {
-                font-size: 2rem;
-            }
-
-            .action-card {
-                padding: 2rem;
-            }
-
-            .action-icon {
-                width: 80px;
-                height: 80px;
-                font-size: 2.5rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .user-info span {
+            .doctor-meta {
                 display: none;
-            }
-
-            .container {
-                padding: 2rem 1rem;
-            }
-
-            .quick-links {
-                grid-template-columns: repeat(2, 1fr);
             }
         }
     </style>
 </head>
 <body>
+    <!-- Top Navigation -->
     <header>
         <nav>
-            <div class="logo">
-                <div class="logo-icon">💚</div>
-                <span class="logo-text">ReViveCare</span>
-            </div>
-            <div class="user-info">
-                <span>Doctor</span>
-                <div class="user-avatar">DJ</div>
+            <a href="{% url 'home' %}" class="logo">
+                <div class="logo-icon">
+                    <i class="fi fi-sr-heart-rate"></i>
+                </div>
+                <div>
+                    <span class="logo-text">ReViveCare</span>
+                    <span class="logo-sub">Doctor Clinical Portal</span>
+                </div>
+            </a>
+
+            <div class="nav-right">
+                <a href="{% url 'doc_info_page' %}" class="btn-header">
+                    <i class="fi fi-rr-user-add"></i>
+                    <span>Onboard Patient / PDF</span>
+                </a>
+                <div class="doctor-pill">
+                    <div class="doctor-avatar">{{ doctor_initials }}</div>
+                    <div class="doctor-meta">
+                        <strong>Dr. {{ doctor.name }}</strong>
+                        <span>{{ doctor.specialty }}</span>
+                    </div>
+                </div>
+                <a href="{% url 'doctor_logout' %}" class="btn-logout">
+                    <i class="fi fi-rr-sign-out-alt"></i>
+                    <span>Logout</span>
+                </a>
             </div>
         </nav>
     </header>
 
     <div class="container">
-        <div class="welcome-section">
-            <h1>👋 Welcome back, Doctor</h1>
-            <p>Manage your patients' recovery journey with ease</p>
+        {% if messages %}
+        <div class="flash-messages">
+            {% for message in messages %}
+            <div class="flash-item">
+                <i class="fi fi-sr-info"></i>
+                <span>{{ message }}</span>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- 1. Doctor Header & Profile Banner -->
+        <div class="doctor-hero">
+            <div class="hero-left">
+                <h1>Welcome, Dr. {{ doctor.name }}</h1>
+                <p>
+                    <span><i class="fi fi-rr-stethoscope"></i> {{ doctor.specialty }}</span>
+                    <span><i class="fi fi-rr-hospital"></i> {{ doctor.hospital }}</span>
+                    <span><i class="fi fi-rr-envelope"></i> {{ doctor.email }}</span>
+                </p>
+            </div>
+            <div class="hero-actions">
+                <a href="{% url 'doc_info_page' %}" class="btn-hero-primary">
+                    <i class="fi fi-sr-file-pdf"></i>
+                    <span>Add Patient &amp; Upload Medical PDF</span>
+                </a>
+            </div>
         </div>
 
+        <!-- Key Clinical Metrics -->
         <div class="stats-grid">
             <div class="stat-card">
-                <div class="stat-icon patients">👥</div>
+                <div class="stat-icon teal">
+                    <i class="fi fi-sr-users-alt"></i>
+                </div>
                 <div class="stat-info">
-                    <h3>47</h3>
-                    <p>Active Patients</p>
+                    <h3>{{ total_patients }}</h3>
+                    <p>Assigned Patients</p>
                 </div>
             </div>
 
             <div class="stat-card">
-                <div class="stat-icon alerts">🚨</div>
+                <div class="stat-icon red">
+                    <i class="fi fi-sr-bell-ring"></i>
+                </div>
                 <div class="stat-info">
-                    <h3>3</h3>
-                    <p>New Alerts</p>
+                    <h3 id="pendingAlertStatCount">{{ pending_alerts_count }}</h3>
+                    <p>Pending Emergency Alerts</p>
                 </div>
             </div>
 
             <div class="stat-card">
-                <div class="stat-icon progress">📈</div>
+                <div class="stat-icon navy">
+                    <i class="fi fi-sr-gym"></i>
+                </div>
                 <div class="stat-info">
-                    <h3>85%</h3>
-                    <p>Avg. Progress Rate</p>
+                    <h3>{{ active_rehab_plans }} <span style="font-size: 0.95rem; font-weight: 500; color: var(--text-gray);">({{ custom_exercises_count }} custom)</span></h3>
+                    <p>Active Rehab Plans</p>
                 </div>
             </div>
 
             <div class="stat-card">
-                <div class="stat-icon reviews">✅</div>
+                <div class="stat-icon green">
+                    <i class="fi fi-sr-chart-line-up"></i>
+                </div>
                 <div class="stat-info">
-                    <h3>12</h3>
-                    <p>Pending Reviews</p>
+                    <h3>{{ overall_compliance }}%</h3>
+                    <p>Avg. Patient Compliance</p>
                 </div>
             </div>
         </div>
 
-        <div class="main-actions">
-            <h2 class="section-title">🎯 Main Actions</h2>
-            <div class="actions-grid">
-                <div class="action-card">
-                    <div class="action-icon">➕</div>
-                    <h2>Add Patient Info</h2>
-                    <p>Register a new patient and set up their personalized recovery plan with discharge instructions</p>
-                    <a href = "{%url 'doc_info_page' %}">
-                    <button class="action-btn">Add New Patient</button>
+        <!-- 3. Real-Time Clinical Alert Feed -->
+        <div class="section-block">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fi fi-sr-triangle-warning" style="color: #E53E3E;"></i>
+                    Real-Time Clinical Alert Feed (Seriousness &gt; 0.75)
+                </h2>
+            </div>
+
+            {% if pending_alerts %}
+            <div class="alerts-grid" id="alertsFeedContainer">
+                {% for alert in pending_alerts %}
+                <div class="alert-card" id="alert-card-{{ alert.id }}">
+                    <div class="alert-top">
+                        <div class="alert-patient">
+                            <div class="alert-patient-badge">{{ alert.patient.name.0|upper }}</div>
+                            <div>
+                                <h4>{{ alert.patient.name }}</h4>
+                                <span>{{ alert.patient.email }} &bull; {{ alert.created_at|date:"M d, Y H:i" }}</span>
+                            </div>
+                        </div>
+                        <span class="score-pill">
+                            🚨 Triage Score: {{ alert.seriousness_score|floatformat:2 }}
+                        </span>
+                    </div>
+
+                    <div class="alert-box">
+                        <strong>Patient Query</strong>
+                        {{ alert.user_query }}
+                    </div>
+
+                    <div class="alert-box">
+                        <strong>AI Triage Response</strong>
+                        {{ alert.ai_response }}
+                    </div>
+
+                    <div class="alert-actions">
+                        <a href="{% url 'patient_detail' alert.patient.id %}" style="color: #9B2C2C; font-size: 0.85rem; font-weight: 600; text-decoration: none;">
+                            Inspect Patient Telemetry &rarr;
+                        </a>
+                        <form method="POST" action="{% url 'review_emergency_alert' alert.id %}" onsubmit="return markAlertReviewed(event, {{ alert.id }});">
+                            {% csrf_token %}
+                            <button type="submit" class="btn-review">
+                                <i class="fi fi-rr-check"></i>
+                                <span>Mark Reviewed</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="empty-alert-banner">
+                <i class="fi fi-sr-shield-check"></i>
+                <div>
+                    <strong>No Pending High-Risk Alerts</strong>
+                    <p style="font-size: 0.85rem; opacity: 0.85;">All patient chatbot triage scores are within safe recovery thresholds (&le; 0.75).</p>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- 2. Assigned Patients List -->
+        <div class="section-block">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fi fi-sr-clipboard-user"></i>
+                    Assigned Patients &amp; Kinematic Compliance
+                </h2>
+                <a href="{% url 'doc_info_page' %}" class="btn-telemetry">
+                    <i class="fi fi-rr-plus"></i>
+                    <span>Add / Update Patient</span>
+                </a>
+            </div>
+
+            <div class="table-card">
+                {% if patient_rows %}
+                <table class="patients-table">
+                    <thead>
+                        <tr>
+                            <th>Patient</th>
+                            <th>Exercise Streak</th>
+                            <th>Compliance Rate</th>
+                            <th>Avg. Form Quality</th>
+                            <th>Custom Rehab</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in patient_rows %}
+                        <tr>
+                            <td>
+                                <div class="patient-cell">
+                                    <div class="patient-avatar">{{ row.patient.name.0|upper }}</div>
+                                    <div>
+                                        <a href="{% url 'patient_detail' row.patient.id %}" class="patient-name">
+                                            {{ row.patient.name }}
+                                            {% if row.pending_alert_count > 0 %}
+                                            <span style="background:#E53E3E; color:white; font-size:0.7rem; padding:0.15rem 0.5rem; border-radius:20px; margin-left:0.35rem;">
+                                                {{ row.pending_alert_count }} Alert
+                                            </span>
+                                            {% endif %}
+                                        </a>
+                                        <span class="patient-email">{{ row.patient.email }}</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="streak-badge">
+                                    🔥 {{ row.streak }} {% if row.streak == 1 %}day{% else %}days{% endif %}
+                                </span>
+                                <div style="font-size: 0.75rem; color: var(--text-gray); margin-top: 0.25rem;">
+                                    {{ row.total_workouts }} sessions logged
+                                </div>
+                            </td>
+                            <td>
+                                <div class="compliance-wrap">
+                                    <div class="compliance-top">
+                                        <span>Adherence</span>
+                                        <span>{{ row.compliance_rate }}%</span>
+                                    </div>
+                                    <div class="compliance-bar">
+                                        <div class="compliance-fill" style="width: {{ row.compliance_rate }}%;"></div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="quality-pill">
+                                    <i class="fi fi-sr-star"></i>
+                                    {{ row.avg_quality }}/100
+                                </span>
+                            </td>
+                            <td>
+                                <span style="font-weight: 600; color: var(--accent-navy);">
+                                    {{ row.custom_count }} prescribed
+                                </span>
+                            </td>
+                            <td>
+                                <div class="action-links">
+                                    <a href="{% url 'patient_detail' row.patient.id %}" class="btn-telemetry">
+                                        <i class="fi fi-rr-chart-histogram"></i>
+                                        <span>Telemetry &amp; Prescribe</span>
+                                    </a>
+                                    <a href="{% url 'doc_info_page' %}?patient_id={{ row.patient.id }}" class="btn-edit-pdf" title="Update Clinical Info / Upload PDF">
+                                        <i class="fi fi-rr-file-pdf"></i>
+                                        <span>PDF / Notes</span>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <div class="empty-patients">
+                    <i class="fi fi-sr-user-add"></i>
+                    <h3>No Patients Assigned to Your Profile Yet</h3>
+                    <p>Onboard a new patient using a medical PDF report or clinical discharge summary to begin tracking their recovery.</p>
+                    <a href="{% url 'doc_info_page' %}" class="btn-telemetry" style="padding: 0.75rem 1.5rem; font-size: 0.95rem;">
+                        <i class="fi fi-rr-plus"></i>
+                        <span>Onboard First Patient</span>
                     </a>
                 </div>
+                {% endif %}
+            </div>
 
-                <div class="action-card">
-                    <div class="action-icon">📊</div>
-                    <h2>See Summaries</h2>
-                    <p>View AI-generated patient progress reports, recovery metrics, and red flag alerts</p>
-                    <button class="action-btn">View Summaries</button>
+            {% if unassigned_patients %}
+            <div class="legacy-card">
+                <div class="legacy-header">
+                    <h4>
+                        <i class="fi fi-sr-folder-download" style="color: var(--primary-teal);"></i>
+                        Unassigned Existing Patient Records ({{ unassigned_patients|length }})
+                    </h4>
+                    <span style="font-size: 0.82rem; color: var(--text-gray);">
+                        Click to assign existing patients to Dr. {{ doctor.name }}'s care roster:
+                    </span>
+                </div>
+                <div class="legacy-list">
+                    {% for up in unassigned_patients %}
+                    <div class="legacy-item">
+                        <div>
+                            <strong style="font-size: 0.9rem; display: block;">{{ up.name }}</strong>
+                            <span style="font-size: 0.78rem; color: var(--text-gray);">{{ up.email }}</span>
+                        </div>
+                        <form method="POST" action="{% url 'claim_unassigned_patient' up.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn-claim">+ Assign to Me</button>
+                        </form>
+                    </div>
+                    {% endfor %}
                 </div>
             </div>
-        </div>
-
-        <div class="quick-access">
-            <h2 class="section-title">⚡ Quick Access</h2>
-            <div class="quick-links">
-                <a href="#" class="quick-link">
-                    <div class="quick-link-icon">🔔</div>
-                    <div class="quick-link-text">Notifications</div>
-                </a>
-                <a href="#" class="quick-link">
-                    <div class="quick-link-icon">📅</div>
-                    <div class="quick-link-text">Appointments</div>
-                </a>
-                <a href="#" class="quick-link">
-                    <div class="quick-link-icon">💬</div>
-                    <div class="quick-link-text">Messages</div>
-                </a>
-                <a href="#" class="quick-link">
-                    <div class="quick-link-icon">📋</div>
-                    <div class="quick-link-text">Reports</div>
-                </a>
-                <a href="#" class="quick-link">
-                    <div class="quick-link-icon">⚙️</div>
-                    <div class="quick-link-text">Settings</div>
-                </a>
-            </div>
+            {% endif %}
         </div>
     </div>
 
     <script>
-        function addPatientInfo() {
-            alert('Opening Add Patient Form...\n\nHere you can:\n• Register new patient\n• Enter discharge details\n• Set recovery plan\n• Assign care protocols\n• Configure monitoring parameters');
-            // In production: window.location.href = '/doctor/add-patient';
-        }
+        async function markAlertReviewed(event, alertId) {
+            event.preventDefault();
+            const form = event.target;
+            const csrfToken = form.querySelector('[name=csrfmiddlewaretoken]').value;
 
-        function seeSummaries() {
-            alert('Opening Patient Summaries...\n\nView:\n• AI-generated progress reports\n• Recovery metrics & charts\n• Red flag alerts\n• Exercise adherence data\n• Symptom tracking history');
-            // In production: window.location.href = '/doctor/summaries';
-        }
-
-        function logout() {
-            if (confirm('Are you sure you want to logout?')) {
-                alert('Logging out...');
-                // In production: window.location.href = '/logout';
-            }
-        }
-
-        // Add click handlers for quick links
-        document.querySelectorAll('.quick-link').forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                const text = link.querySelector('.quick-link-text').textContent;
-                alert(`Opening ${text}...`);
-            });
-        });
-
-        // Animate stats on load
-        window.addEventListener('load', () => {
-            const statNumbers = document.querySelectorAll('.stat-info h3');
-            statNumbers.forEach((stat, index) => {
-                const finalValue = parseInt(stat.textContent);
-                let currentValue = 0;
-                const increment = Math.ceil(finalValue / 30);
-                
-                const counter = setInterval(() => {
-                    currentValue += increment;
-                    if (currentValue >= finalValue) {
-                        stat.textContent = stat.textContent.includes('%') ? finalValue + '%' : finalValue;
-                        clearInterval(counter);
-                    } else {
-                        stat.textContent = stat.textContent.includes('%') ? currentValue + '%' : currentValue;
+            try {
+                const resp = await fetch(form.action, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': csrfToken,
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json'
                     }
-                }, 30);
-            });
-        });
+                });
+                if (resp.ok) {
+                    const card = document.getElementById('alert-card-' + alertId);
+                    if (card) {
+                        card.style.transition = 'all 0.3s ease';
+                        card.style.opacity = '0';
+                        card.style.transform = 'scale(0.95)';
+                        setTimeout(() => card.remove(), 300);
+                    }
+                    const countEl = document.getElementById('pendingAlertStatCount');
+                    if (countEl) {
+                        const cur = parseInt(countEl.textContent) || 0;
+                        countEl.textContent = Math.max(0, cur - 1);
+                    }
+                } else {
+                    form.submit();
+                }
+            } catch (e) {
+                form.submit();
+            }
+            return false;
+        }
     </script>
 </body>
 </html>
